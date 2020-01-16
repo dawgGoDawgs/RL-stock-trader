@@ -2,8 +2,8 @@
 
 # Edit these values to change how the RL brain learns
 EPSILON = .8
-ALPHA = .9
-GAMMA = .9
+ALPHA = .1
+GAMMA = .1
 
 # Create agent class
 class Agent:
@@ -43,11 +43,11 @@ CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
 EQUITY_TRAIN = web.get_data_yahoo(GIVEN_EQUITY, end=START_DATE, start="1/1/2000",
                             interval='d')
-EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2019', start=START_DATE,
+EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2020', start=START_DATE,
                             interval='d')
-MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2019',
+MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2020',
                                     start=START_DATE, interval='d')
-RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
+RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2020', start=START_DATE,
                              interval='d')
 
 ## Calculate HMM States
