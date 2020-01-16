@@ -57,8 +57,8 @@ MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2019',
 RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
                              interval='d')
 
-# Don't edit these
-STATES = 3
+# Why not edit this?
+STATES = 6
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
