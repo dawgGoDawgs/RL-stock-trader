@@ -271,7 +271,7 @@ def run():
     # Return the Q-Table and profit as a tuple
     cum_return = np.cumprod(np.array(returns) + 1)[-1]
     win_rate = float(wins) / float(wins + losses)
-    average_periods = mean(trade_periods)
+    average_periods = np.mean(trade_periods)
     return (q_table, cum_return, n_round_trips, average_periods, win_rate)
 
 # Ensures everything is loaded
