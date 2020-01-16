@@ -64,8 +64,8 @@ close_v = EQUITY["Close"].values
 high_v = EQUITY["High"].values
 low_v = EQUITY["Low"].values
 volume = EQUITY["Volume"].values.astype(float)
-pct = np.diff(close_v) / close_v[:-1]
-pct_volume = np.nan_to_num(np.diff(volume) / volume[:-1])
+pct = close_v.pct_change()
+pct_volume = volume.pct_change()
 # feature engineering
 adx = ADX(high_v, low_v, close_v, timeperiod=14)
 rsi = RSI(close_v, timeperiod=14)
