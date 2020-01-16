@@ -216,7 +216,7 @@ Q-table:
         'When Equity Appreciated and Market Vol Decrease',
         'When Equity Held Value and Market Vol Increase',
         'When Equity Held Value and Market Vol Decrease',
-        'When Equity Depreciated and Market Vol Increase'
+        'When Equity Depreciated and Market Vol Increase',
         'When Equity Depreciated and Market Vol Decrease'
         ]
     print q_table
