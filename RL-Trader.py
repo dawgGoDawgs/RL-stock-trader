@@ -1,20 +1,9 @@
 # Reinforcement Learning Equity Trader
-# By Matija Krolo || github.com/Kroat
-# To use:
-# 1.) Ensure all necessary libraries are installed on your machine (Numpy, Scipy, Pandas)
-# 2.) Place RL-Trader.py in a project directory
-# 3.) cd into the project directory
-# 4.) Pass the command:
-#       RL-Trader.py [EQUITY] [START DATE - DAY/MONTH/YEAR] [STARTING PORTFOLIO VALUE] [HOW MANY TRADES TO RUN BEFORE REINFORCEMENT LEARNING BEGINS]
-#
-# ex: RL-Trader.py F 1/1/2000 1000 200
-# ^ This runs RL-Trader against Ford's historical data and analyzes 200 trades before the Reinforcement Learning begins with a beginning portfolio of $1,000
-# ** Please note that this RL script only trades one equity at a time!
 
 # Edit these values to change how the RL brain learns
 EPSILON = .8
 ALPHA = .9
-GAMMA = .001
+GAMMA = .1
 
 # Create agent class
 class Agent:
