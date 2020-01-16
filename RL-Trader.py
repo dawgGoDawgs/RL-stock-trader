@@ -122,9 +122,9 @@ def select_state(pointer):
             return 1 # Equity Appreciated and Market Vol Decrease
     if current_price <= previous_price:
         if current_vol > previous_vol:
-            return 4 # Equity Depreciated and Market Vol Increase
+            return 2 # Equity Depreciated and Market Vol Increase
         if current_vol <= previous_vol:
-            return 5 # Equity Depreciated and Market Vol Decrease
+            return 3 # Equity Depreciated and Market Vol Decrease
 
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
