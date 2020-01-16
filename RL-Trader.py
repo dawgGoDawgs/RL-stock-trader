@@ -52,12 +52,35 @@ if len(sys.argv) != 5:
 # Get Equity Data
 CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
+EQUITY_TRAIN = web.get_data_yahoo(GIVEN_EQUITY, end=START_DATE, start="1/1/2000",
+                            interval='d')
 EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2019', start=START_DATE,
                             interval='d')
 MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2019',
                                     start=START_DATE, interval='d')
 RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
                              interval='d')
+
+## Calculate HMM States
+open_v = EQUITY_TRAIN["Open"].values
+close_v = EQUITY_TRAIN["Close"].values
+high_v = EQUITY_TRAIN["High"].values
+low_v = EQUITY_TRAIN["Low"].values
+volume = EQUITY_TRAIN["Volume"].values.astype(float)
+pct = pd.Series(close_v).pct_change().values
+pct_volume = pd.Series(volume).pct_change().values
+# feature engineering
+adx = ADX(high_v, low_v, close_v, timeperiod=14)
+rsi = RSI(close_v, timeperiod=14)
+beta = BETA(high_v, low_v, timeperiod=30)
+correl = CORREL(high_v, low_v, timeperiod=30)
+mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
+# Pack diff and volume for training.
+X_train = np.column_stack([pct, adx, rsi, beta, correl, mfi])
+col_mean = np.nanmean(X, axis=0)
+inds = np.where(np.isnan(X))
+X_train[inds] = np.take(col_mean, inds[1])
+
 ## Calculate HMM States
 open_v = EQUITY["Open"].values
 close_v = EQUITY["Close"].values
@@ -73,21 +96,12 @@ beta = BETA(high_v, low_v, timeperiod=30)
 correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
 
-print EQUITY.shape
-print pct.shape
-print adx.shape
-print rsi.shape
-print beta.shape
-print correl.shape
-print mfi.shape
-
 # Pack diff and volume for training.
 X = np.column_stack([pct, adx, rsi, beta, correl, mfi])
 col_mean = np.nanmean(X, axis=0)
 inds = np.where(np.isnan(X))
 X[inds] = np.take(col_mean, inds[1])
 # Make an HMM instance and execute fit
-X_train = X[:1000]
 num_components = 3
 model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=1000).fit(X_train)
 hidden_states = model.predict(X)
@@ -152,7 +166,6 @@ def select_state(pointer):
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
 
-    print "current_hidden:", current_hidden
     if current_price > previous_price:
         if current_hidden == 0:
             return 0 # Equity Appreciated and Hidden is 0
