@@ -225,11 +225,13 @@ def run():
     inPortfolio = False
     # Assuming 0 profit -- or a portfolio with a reference of $0
     returns = []
+    trade_periods = []
     # Move through all possible trades
     trade_prev = 1
     n_round_trips = 0
     wins = 0
     losses = 0
+    n_periods = 0
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table)
@@ -238,12 +240,16 @@ def run():
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
+        if trade == 0:
+            n_periods += 1
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
             if ret >= 0:
                 wins += 1
             else:
                 losses += 1
+            trade_periods.append(n_periods)
+            n_periods = 0
             returns.append(ret)
         trade_prev = trade
         # Slows down the script
@@ -265,11 +271,12 @@ def run():
     # Return the Q-Table and profit as a tuple
     cum_return = np.cumprod(np.array(returns) + 1)[-1]
     win_rate = float(wins) / float(wins + losses)
-    return (q_table, cum_return, n_round_trips, win_rate)
+    average_periods = mean(trade_periods)
+    return (q_table, cum_return, n_round_trips, average_periods, win_rate)
 
 # Ensures everything is loaded
 if __name__ == '__main__':
-    q_table, cum_return, n_round_trips, win_rate = run()
+    q_table, cum_return, n_round_trips, average_periods, win_rate = run()
     print '''\r
 Q-table:
 '''
@@ -289,4 +296,5 @@ Q-table:
     END_PORTFOLIO_VALUE = cum_return * float(STARTING_PORTFOLIO_VALUE)
     print '\nFinal portfolio value from trading ' + str(GIVEN_EQUITY) + ' with starting portfolio of $' + str(STARTING_PORTFOLIO_VALUE) + ': $' + str(END_PORTFOLIO_VALUE)
     print "total round trip:", n_round_trips
+    print "average trade periods:", average_periods
     print "win rate:", win_rate
