@@ -12,8 +12,8 @@
 # ** Please note that this RL script only trades one equity at a time!
 
 # Edit these values to change how the RL brain learns
-EPSILON = .3
-ALPHA = .1
+EPSILON = .8
+ALPHA = .9
 GAMMA = .01
 
 # Create agent class
