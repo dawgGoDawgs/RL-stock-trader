@@ -152,6 +152,7 @@ def select_state(pointer):
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
 
+    print "current_hidden:", current_hidden
     if current_price > previous_price:
         if current_hidden == 0:
             return 0 # Equity Appreciated and Hidden is 0
