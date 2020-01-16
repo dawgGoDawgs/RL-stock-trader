@@ -58,7 +58,7 @@ RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
                              interval='d')
 
 # Why not edit this?
-STATES = 6
+STATES = 4
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -107,9 +107,9 @@ def choose_trade(pointer, q_table):
 # Selects the state on the Q-Table
 def select_state(pointer):
     # Find the current price of the equity
-    current_price = round(data['EQUITY'][pointer], 1)
+    current_price = data['EQUITY'][pointer]
     # Find the previous price of the equity
-    previous_price = round(data['EQUITY'][pointer - 1], 1)
+    previous_price = data['EQUITY'][pointer - 1]
     # Find the current market volatility
     current_vol = data['SIGMA'][pointer]
     # Find the previous market volatility
@@ -120,12 +120,7 @@ def select_state(pointer):
             return 0  # Equity Appreciated and Market Vol Increase
         if current_vol <= previous_vol:
             return 1 # Equity Appreciated and Market Vol Decrease
-    if current_price == previous_price:
-        if current_vol > previous_vol:
-            return 2 # Equity Held Value and Market Vol Increase
-        if current_vol <= previous_vol:
-            return 3 # Equity Held Value and Market Vol Decrease
-    if current_price < previous_price:
+    if current_price <= previous_price:
         if current_vol > previous_vol:
             return 4 # Equity Depreciated and Market Vol Increase
         if current_vol <= previous_vol:
@@ -214,8 +209,6 @@ Q-table:
     q_table["Reference"] = [
         'When Equity Appreciated and Market Vol Increase',
         'When Equity Appreciated and Market Vol Decrease',
-        'When Equity Held Value and Market Vol Increase',
-        'When Equity Held Value and Market Vol Decrease',
         'When Equity Depreciated and Market Vol Increase',
         'When Equity Depreciated and Market Vol Decrease'
         ]
