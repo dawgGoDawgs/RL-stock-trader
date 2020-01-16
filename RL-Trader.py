@@ -197,6 +197,7 @@ def run():
         time.sleep(.05)
         # Append to profit
         profit += result
+        print "select state:", x
         q_predict = q_table.iloc[select_state(x), trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
