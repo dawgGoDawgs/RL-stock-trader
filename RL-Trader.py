@@ -196,7 +196,7 @@ def determine_payoff(pointer, trade, inPortfolio):
             inPortfolio = False  # Remove Equity from portfolio
             print '** Equity sold at $' + str(round(data['EQUITY'
                     ][pointer], 2))
-            return ((data['EQUITY'][pointer] - priceAtPurchase) / priceAtPurchase, inPortfolio)
+            return (float(data['EQUITY'][pointer] - priceAtPurchase) / float(priceAtPurchase), inPortfolio)
     if inPortfolio == False:  # Equity is not owned
         if trade == 0:  # Buy the equity
             inPortfolio = True  # Add it to the portfolio
@@ -232,7 +232,7 @@ def run():
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
-        print 'Return from instance: ' + str(round(ret, 2))
+        print 'Return from instance: ' + str(ret)
         # Determine trade.
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
