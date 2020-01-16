@@ -58,7 +58,7 @@ RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
                              interval='d')
 
 # Why not edit this?
-STATES = 4
+STATES = 8
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -114,17 +114,33 @@ def select_state(pointer):
     current_vol = data['SIGMA'][pointer]
     # Find the previous market volatility
     previous_vol = data['SIGMA'][pointer - 1]
+    # Find the current RF rate
+    current_rf = data['RF'][pointer]
+    # Find the previous RF rate
+    previous_rf = data['RF'][pointer - 1]
 
     if current_price > previous_price:
         if current_vol > previous_vol:
-            return 0  # Equity Appreciated and Market Vol Increase
+            if current_rf > previous_rf:
+                return 0  # Equity Appreciated and Market Vol Increase and Risk Free Rate Increase
+            if current_rf <= previous_rf:
+                return 1  # Equity Appreciated and Market Vol Increase and Risk Free Rate Decrease
         if current_vol <= previous_vol:
-            return 1 # Equity Appreciated and Market Vol Decrease
+            if current_rf > previous_rf:
+                return 2  # Equity Appreciated and Market Vol Decrease and Risk Free Rate Increase
+            if current_rf <= previous_rf:
+                return 3  # Equity Appreciated and Market Vol Decrease and Risk Free Rate Decrease
     if current_price <= previous_price:
         if current_vol > previous_vol:
-            return 2 # Equity Depreciated and Market Vol Increase
+            if current_rf > previous_rf:
+                return 4  # Equity Deppreciated and Market Vol Increase and Risk Free Rate Increase
+            if current_rf <= previous_rf:
+                return 5  # Equity Deppreciated and Market Vol Increase and Risk Free Rate Decrease
         if current_vol <= previous_vol:
-            return 3 # Equity Depreciated and Market Vol Decrease
+            if current_rf > previous_rf:
+                return 6  # Equity Deppreciated and Market Vol Decrease and Risk Free Rate Increase
+            if current_rf <= previous_rf:
+                return 7  # Equity Deppreciated and Market Vol Decrease and Risk Free Rate Decrease
 
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
@@ -207,10 +223,14 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'When Equity Appreciated and Market Vol Increase',
-        'When Equity Appreciated and Market Vol Decrease',
-        'When Equity Depreciated and Market Vol Increase',
-        'When Equity Depreciated and Market Vol Decrease'
+        'When Equity Appreciated and Market Vol Increase and RF rate Increase',
+        'When Equity Appreciated and Market Vol Increase and RF rate Decrease',
+        'When Equity Appreciated and Market Vol Decrease and RF rate Increase',
+        'When Equity Appreciated and Market Vol Decrease and RF rate Decrease',
+        'When Equity Depreciated and Market Vol Increase and RF rate Increase',
+        'When Equity Depreciated and Market Vol Increase and RF rate Decrease',
+        'When Equity Depreciated and Market Vol Decrease and RF rate Increase',
+        'When Equity Depreciated and Market Vol Decrease and RF rate Decrease'
         ]
     print q_table
     # Show profits
