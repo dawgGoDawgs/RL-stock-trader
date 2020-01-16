@@ -22,8 +22,7 @@ def state_logic(pointer, data):
     returns = log(stable_price / price_increase)
     # Tinker with the return threshold as well
     print "pointer:", pointer
-    print "stable_price:", stable_price
-    print "price_increase:", price_increase
+    print "data:", data
     print "temp returns:", returns
     if returns <= 10:
         return 0  # Sell
