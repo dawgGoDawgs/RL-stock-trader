@@ -115,11 +115,9 @@ def select_state(pointer):
     # Find the previous market volatility
     previous_vol = data['SIGMA'][pointer - 1]
     # Find the current RF rate
-    current_rf = data['RF'][pointer]
+    current_rf = data['RF'][pointer] if not np.isnan(data['RF'][pointer]) else 1.0
     # Find the previous RF rate
-    previous_rf = data['RF'][pointer - 1]
-    print data.iloc[pointer]
-    print data.iloc[pointer - 1]
+    previous_rf = data['RF'][pointer - 1] if not np.isnan(data['RF'][pointer - 1]) else 1.0
 
     if current_price > previous_price:
         if current_vol > previous_vol:
