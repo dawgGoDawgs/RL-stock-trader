@@ -22,9 +22,9 @@ def state_logic(pointer, data):
     returns = log(stable_price / price_increase)
     # Tinker with the return threshold as well
     print "temp returns:", returns
-    if returns <= 2:
+    if returns <= 1:
         return 0  # Sell
-    if returns > 2:
+    if returns > 1:
         return 1  # Buy
 
 # Black-Scholes Model function needed for our current state logic
