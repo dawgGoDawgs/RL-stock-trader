@@ -72,6 +72,15 @@ rsi = RSI(close_v, timeperiod=14)
 beta = BETA(high_v, low_v, timeperiod=30)
 correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
+
+print EQUITY.shape
+print pct.shape
+print adx.shape
+print rsi.shape
+print beta.shape
+print correl.shape
+print mfi.shape
+
 # Pack diff and volume for training.
 X = np.column_stack([pct, adx, rsi, beta, correl, mfi])
 col_mean = np.nanmean(X, axis=0)
