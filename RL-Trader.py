@@ -118,6 +118,8 @@ def select_state(pointer):
     current_rf = data['RF'][pointer]
     # Find the previous RF rate
     previous_rf = data['RF'][pointer - 1]
+    print data.iloc[pointer]
+    print data.iloc[pointer - 1]
 
     if current_price > previous_price:
         if current_vol > previous_vol:
@@ -197,7 +199,6 @@ def run():
         time.sleep(.05)
         # Append to profit
         profit += result
-        print "select state:", select_state(x)
         q_predict = q_table.iloc[select_state(x), trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
