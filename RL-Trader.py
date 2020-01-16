@@ -247,10 +247,10 @@ def run():
         q_predict = q_table.iloc[select_state(x), trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
-            q_target = result + float(agent.gamma) * q_table.iloc[select_state(x), :
+            q_target = ret + float(agent.gamma) * q_table.iloc[select_state(x), :
                     ].max()
         else:
-            q_target = result + float(agent.gamma) * q_table.iloc[select_state(x), :
+            q_target = ret + float(agent.gamma) * q_table.iloc[select_state(x), :
                     ].max()
         # Append to located cell in Q-Table || Tweak this
         q_table.iloc[select_state(x), trade] += float(agent.alpha) * (q_target
