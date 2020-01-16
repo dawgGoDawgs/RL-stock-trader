@@ -11,7 +11,7 @@ def state_logic(pointer, data):
     price_increase = calculate_BSM(data['EQUITY'][pointer],
                                    data['EQUITY'][pointer] * 1.05, # 5% appreciation
                                    data['RF'][pointer] / 100,
-                                   data['SIGMA'][pointer] / 100, 1 # Roughly one month timeframe
+                                   data['SIGMA'][pointer] / 100, 1 # Roughly one day timeframe
                                    / 365.0)
     # BSM for if the option's exercise price holds its value
     stable_price = calculate_BSM(data['EQUITY'][pointer], data['EQUITY'
@@ -22,9 +22,9 @@ def state_logic(pointer, data):
     returns = log(stable_price / price_increase)
     # Tinker with the return threshold as well
     print "temp returns:", returns
-    if returns <= 2:
+    if returns <= 10:
         return 0  # Sell
-    if returns > 2:
+    if returns > 10:
         return 1  # Buy
 
 # Black-Scholes Model function needed for our current state logic
