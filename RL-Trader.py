@@ -50,12 +50,12 @@ if len(sys.argv) != 5:
 # Get Equity Data
 CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
-EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2019', start=START_DATE,
-                            interval='m')
-MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2019',
-                                    start=START_DATE, interval='m')
-RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
-                             interval='m')
+EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2020', start=START_DATE,
+                            interval='d')
+MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2020',
+                                    start=START_DATE, interval='d')
+RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2020', start=START_DATE,
+                             interval='d')
 
 # Don't edit these
 STATES = 3
