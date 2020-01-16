@@ -50,11 +50,11 @@ if len(sys.argv) != 5:
 # Get Equity Data
 CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
-EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2020', start=START_DATE,
+EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2019', start=START_DATE,
                             interval='d')
-MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2020',
+MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2019',
                                     start=START_DATE, interval='d')
-RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2020', start=START_DATE,
+RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
                              interval='d')
 
 # Don't edit these
@@ -110,12 +110,26 @@ def select_state(pointer):
     current_price = round(data['EQUITY'][pointer], 1)
     # Find the previous price of the equity
     previous_price = round(data['EQUITY'][pointer - 1], 1)
+    # Find the current market volatility
+    current_vol = data['SIGMA'][pointer]
+    # Find the previous market volatility
+    previous_vol = data['SIGMA'][pointer - 1]
+
     if current_price > previous_price:
-        return 0  # Equity Appreciated
+        if current_vol > previous_vol:
+            return 0  # Equity Appreciated and Market Vol Increase
+        if current_vol <= previous_vol:
+            return 1 # Equity Appreciated and Market Vol Decrease
     if current_price == previous_price:
-        return 1  # Equity Held Value
+        if current_vol > previous_vol:
+            return 2 # Equity Held Value and Market Vol Increase
+        if current_vol <= previous_vol:
+            return 3 # Equity Held Value and Market Vol Decrease
     if current_price < previous_price:
-        return 2  # Equity Depreciated
+        if current_vol > previous_vol:
+            return 4 # Equity Depreciated and Market Vol Increase
+        if current_vol <= previous_vol:
+            return 5 # Equity Depreciated and Market Vol Decrease
 
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
@@ -197,7 +211,14 @@ if __name__ == '__main__':
 Q-table:
 '''
     # Add reference column
-    q_table["Reference"] = ['When Equity Appreciated', 'When Equity Held Value', 'When Equity Depreciated']
+    q_table["Reference"] = [
+        'When Equity Appreciated and Market Vol Increase',
+        'When Equity Appreciated and Market Vol Decrease',
+        'When Equity Held Value and Market Vol Increase',
+        'When Equity Held Value and Market Vol Decrease',
+        'When Equity Depreciated and Market Vol Increase'
+        'When Equity Depreciated and Market Vol Decrease'
+        ]
     print q_table
     # Show profits
     calc_profits = 1 + round(profit, 2)/100.0
