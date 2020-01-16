@@ -34,6 +34,8 @@ from math import log
 import pandas as pd
 import sys, time, datetime
 from Logic.logic import calculate_BSM, state_logic
+from talib import ADX, HT_DCPERIOD, RSI, BETA, CORREL, MFI
+from hmmlearn.hmm import GaussianHMM
 
 # Welcome message
 print "\nThanks for using the Reinforcement Learning Stock Trader by Matija Krolo. If you experience an error, it is most likely because the Equity/Stock you chose to analyize does not have available data before the date you entered. If you encounter an error, please check Yahoo.com/finance to ensure it is not the case. \n"
@@ -56,6 +58,29 @@ MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2019',
                                     start=START_DATE, interval='d')
 RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2019', start=START_DATE,
                              interval='d')
+## Calculate HMM States
+open_v = EQUITY["Open"].values
+close_v = EQUITY["Close"].values
+high_v = EQUITY["High"].values
+low_v = EQUITY["Low"].values
+volume = EQUITY["Volume " + currency].values.astype(float)
+pct = np.diff(close_v) / close_v[:-1]
+pct_volume = np.nan_to_num(np.diff(volume) / volume[:-1])
+# feature engineering
+adx = ADX(high_v, low_v, close_v, timeperiod=14)
+rsi = RSI(close_v, timeperiod=14)
+beta = BETA(high_v, low_v, timeperiod=30)
+correl = CORREL(high_v, low_v, timeperiod=30)
+mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
+# Pack diff and volume for training.
+X = np.column_stack([pct, adx, rsi, beta, correl, mfi])
+col_mean = np.nanmean(X, axis=0)
+inds = np.where(np.isnan(X))
+X[inds] = np.take(col_mean, inds[1])
+# Make an HMM instance and execute fit
+num_components = 3
+model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=1000).fit(X_train)
+hidden_states = model.predict(X)
 
 # Why not edit this?
 STATES = 8
@@ -76,8 +101,12 @@ def build_q_table(n_states, actions):
     return table
 
 # Create dictionary
-compile_data = {'EQUITY': EQUITY['Adj Close'], 'RF': RF_Rate['Adj Close'
-                ], 'SIGMA': MKT_VOLATIILTY['Adj Close']}
+compile_data = {
+    'EQUITY': EQUITY['Adj Close'],
+    'RF': RF_Rate['Adj Close'],
+    'SIGMA': MKT_VOLATIILTY['Adj Close'],
+    'HIDDEN': hidden_states
+    }
 
 # Compile dataframe from dictionary
 data = pd.DataFrame(compile_data)
