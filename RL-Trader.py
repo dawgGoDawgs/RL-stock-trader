@@ -77,8 +77,8 @@ correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
 # Pack diff and volume for training.
 X_train = np.column_stack([pct, adx, rsi, beta, correl, mfi])
-col_mean = np.nanmean(X, axis=0)
-inds = np.where(np.isnan(X))
+col_mean = np.nanmean(X_train, axis=0)
+inds = np.where(np.isnan(X_train))
 X_train[inds] = np.take(col_mean, inds[1])
 
 ## Calculate HMM States
