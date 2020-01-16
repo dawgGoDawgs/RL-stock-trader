@@ -196,7 +196,7 @@ def determine_payoff(pointer, trade, inPortfolio):
             inPortfolio = False  # Remove Equity from portfolio
             print '** Equity sold at $' + str(round(data['EQUITY'
                     ][pointer], 2))
-            return (data['EQUITY'][pointer] - priceAtPurchase, inPortfolio)
+            return ((data['EQUITY'][pointer] - priceAtPurchase) / priceAtPurchase, inPortfolio)
     if inPortfolio == False:  # Equity is not owned
         if trade == 0:  # Buy the equity
             inPortfolio = True  # Add it to the portfolio
@@ -219,9 +219,8 @@ def run():
     # Builds the Q-Table
     q_table = build_q_table(STATES, ACTIONS)
     inPortfolio = False
-    aggregate_profit = []
     # Assuming 0 profit -- or a portfolio with a reference of $0
-    profit = 0
+    returns = []
     # Move through all possible trades
     trade_prev = 1
     n_round_trips = 0
@@ -231,23 +230,20 @@ def run():
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table)
         # Find the payoff from the trade
-        result, inPortfolio = determine_payoff(x, trade, inPortfolio)
+        ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
-        print 'Profit from instance: ' + str(round(result, 2))
+        print 'Return from instance: ' + str(round(ret, 2))
         # Determine trade.
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
-            if result >= 0:
+            if ret >= 0:
                 wins += 1
             else:
                 losses += 1
+            returns.append(ret)
         trade_prev = trade
-        # Append result from trade to aggregate profit
-        aggregate_profit.append(result)
         # Slows down the script
         time.sleep(.05)
-        # Append to profit
-        profit += result
         q_predict = q_table.iloc[select_state(x), trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
@@ -263,13 +259,13 @@ def run():
     if inPortfolio:
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
-    profit = np.sum(aggregate_profit)
+    cum_return = np.cumprod(np.array(returns) + 1)
     win_rate = float(wins) / float(wins + losses)
-    return (q_table, profit, n_round_trips, win_rate)
+    return (q_table, cum_return, n_round_trips, win_rate)
 
 # Ensures everything is loaded
 if __name__ == '__main__':
-    q_table, profit, n_round_trips, win_rate = run()
+    q_table, cum_return, n_round_trips, win_rate = run()
     print '''\r
 Q-table:
 '''
@@ -284,8 +280,7 @@ Q-table:
         ]
     print q_table
     # Show profits
-    calc_profits = 1 + round(profit, 2)/100.0
-    calc_profits = calc_profits * float(STARTING_PORTFOLIO_VALUE)
-    print '\nProfits from trading ' + str(GIVEN_EQUITY) + ' with starting portfolio of $' + str(STARTING_PORTFOLIO_VALUE) + ': $' + str(calc_profits)
+    END_PORTFOLIO_VALUE = cum_return * float(STARTING_PORTFOLIO_VALUE)
+    print '\nFinal portfolio value from trading ' + str(GIVEN_EQUITY) + ' with starting portfolio of $' + str(STARTING_PORTFOLIO_VALUE) + ': $' + str(END_PORTFOLIO_VALUE)
     print "total round trip:", n_round_trips
     print "win rate:", win_rate
