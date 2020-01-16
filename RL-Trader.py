@@ -259,7 +259,7 @@ def run():
     if inPortfolio:
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
-    cum_return = np.cumprod(np.array(returns) + 1)
+    cum_return = np.cumprod(np.array(returns) + 1)[-1]
     win_rate = float(wins) / float(wins + losses)
     return (q_table, cum_return, n_round_trips, win_rate)
 
