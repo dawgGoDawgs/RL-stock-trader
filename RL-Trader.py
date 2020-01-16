@@ -223,14 +223,25 @@ def run():
     # Assuming 0 profit -- or a portfolio with a reference of $0
     profit = 0
     # Move through all possible trades
+    trade_prev = 1
+    n_round_trips = 0
+    wins = 0
+    losses = 0
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table)
-        print trade
         # Find the payoff from the trade
         result, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
         print 'Profit from instance: ' + str(round(result, 2))
+        # Determine trade.
+        if trade_prev == 0 and trade == 1:
+            n_round_trips += 1
+            if result >= 0:
+                wins += 1
+            else:
+                losses += 1
+        trade_prev = trade
         # Append result from trade to aggregate profit
         aggregate_profit.append(result)
         # Slows down the script
@@ -253,11 +264,12 @@ def run():
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
     profit = np.sum(aggregate_profit)
-    return (q_table, profit)
+    win_rate = wins / (wins + losses)
+    return (q_table, profit, n_round_trips, win_rate)
 
 # Ensures everything is loaded
 if __name__ == '__main__':
-    q_table, profit = run()
+    q_table, profit, n_round_trips, win_rate = run()
     print '''\r
 Q-table:
 '''
@@ -275,3 +287,5 @@ Q-table:
     calc_profits = 1 + round(profit, 2)/100.0
     calc_profits = calc_profits * float(STARTING_PORTFOLIO_VALUE)
     print '\nProfits from trading ' + str(GIVEN_EQUITY) + ' with starting portfolio of $' + str(STARTING_PORTFOLIO_VALUE) + ': $' + str(calc_profits)
+    print "total round trip:", n_round_trips
+    print "win rate:", win_rate
