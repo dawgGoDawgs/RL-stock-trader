@@ -264,7 +264,7 @@ def run():
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
     profit = np.sum(aggregate_profit)
-    win_rate = wins / (wins + losses)
+    win_rate = float(wins) / float(wins + losses)
     return (q_table, profit, n_round_trips, win_rate)
 
 # Ensures everything is loaded
