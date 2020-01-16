@@ -226,6 +226,7 @@ def run():
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table)
+        print trade
         # Find the payoff from the trade
         result, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
