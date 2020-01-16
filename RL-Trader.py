@@ -63,7 +63,7 @@ open_v = EQUITY["Open"].values
 close_v = EQUITY["Close"].values
 high_v = EQUITY["High"].values
 low_v = EQUITY["Low"].values
-volume = EQUITY["Volume " + currency].values.astype(float)
+volume = EQUITY["Volume"].values.astype(float)
 pct = np.diff(close_v) / close_v[:-1]
 pct_volume = np.nan_to_num(np.diff(volume) / volume[:-1])
 # feature engineering
