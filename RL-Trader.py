@@ -250,7 +250,7 @@ def run():
         next_state = select_state(x)
         print "cur state:", cur_state
         # Find the payoff from the trade
-        ret, inPortfolio = determine_payoff(x-1, trade, inPortfolio)
+        ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
