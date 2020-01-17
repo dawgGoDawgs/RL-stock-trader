@@ -304,7 +304,7 @@ Q-table:
         'Equity Deppreciated and Hidden is 0',
         "Equity Deppreciated and Hidden is 1",
         "Equity Deppreciated and Hidden is 2",
-        "Equity Deppreciated and Hidden is 3",
+        "Equity Deppreciated and Hidden is 3"
         ]
     print q_table
     # Show profits
