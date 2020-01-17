@@ -7,7 +7,7 @@
 EPSILON = .8
 ALPHA = .1
 GAMMA = .3
-stop_loss = -0.02
+stop_loss = -0.01
 
 # Create agent class
 class Agent:
