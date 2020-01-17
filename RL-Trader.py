@@ -3,7 +3,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .9
 ALPHA = .1
-GAMMA = .1
+GAMMA = .5
 
 # Create agent class
 class Agent:
@@ -96,7 +96,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 16
+STATES = 8
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -136,7 +136,6 @@ def choose_trade(pointer, q_table, inPortfolio):
     # If the greedy factor is less than a randomly distributed number, if there are no values
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
-    print np.count_nonzero(state_actions.values)
     if np.random.uniform() > float(agent.epsilon) or np.count_nonzero(state_actions.values) == 0 or pointer < int(TRADES_TO_RUN):
         print "analytical"
         return analytic_decision
@@ -157,44 +156,24 @@ def select_state(pointer, inPortfolio):
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
 
-    if inPortfolio:
-        if current_price > previous_price:
-            if current_hidden == 0:
-                return 0 # Equity Appreciated and Hidden is 0 and is in portfolio
-            if current_hidden == 1:
-                return 1 # Equity Appreciated and Hidden is 1 and is in portfolio
-            if current_hidden == 2:
-                return 2 # Equity Appreciated and Hidden is 2 and is in portfolio
-            if current_hidden == 3:
-                return 3 # Equity Appreciated and Hidden is 3 and is in portfolio
-        if current_price <= previous_price:
-            if current_hidden == 0:
-                return 4 # Equity Deppreciated and Hidden is 0 and is in portfolio
-            if current_hidden == 1:
-                return 5 # Equity Deppreciated and Hidden is 1 and is in portfolio
-            if current_hidden == 2:
-                return 6 # Equity Deppreciated and Hidden is 2 and is in portfolio
-            if current_hidden == 3:
-                return 7 # Equity Deppreciated and Hidden is 3 and is in portfolio
-    else:
-        if current_price > previous_price:
-            if current_hidden == 0:
-                return 8 # Equity Appreciated and Hidden is 0 and is out of portfolio
-            if current_hidden == 1:
-                return 9 # Equity Appreciated and Hidden is 1 and is out of portfolio
-            if current_hidden == 2:
-                return 10 # Equity Appreciated and Hidden is 2 and is out of portfolio
-            if current_hidden == 3:
-                return 11 # Equity Appreciated and Hidden is 3 and is out of portfolio
-        if current_price <= previous_price:
-            if current_hidden == 0:
-                return 12 # Equity Deppreciated and Hidden is 0 and is out of portfolio
-            if current_hidden == 1:
-                return 13 # Equity Deppreciated and Hidden is 1 and is out of portfolio
-            if current_hidden == 2:
-                return 14 # Equity Deppreciated and Hidden is 2 and is out of portfolio
-            if current_hidden == 3:
-                return 15 # Equity Deppreciated and Hidden is 3 and is out of portfolio
+    if current_price > previous_price:
+        if current_hidden == 0:
+            return 0 # Equity Appreciated and Hidden is 0
+        if current_hidden == 1:
+            return 1 # Equity Appreciated and Hidden is 1
+        if current_hidden == 2:
+            return 2 # Equity Appreciated and Hidden is 2
+        if current_hidden == 3:
+            return 3 # Equity Appreciated and Hidden is 3
+    if current_price <= previous_price:
+        if current_hidden == 0:
+            return 4 # Equity Deppreciated and Hidden is 0
+        if current_hidden == 1:
+            return 5 # Equity Deppreciated and Hidden is 1
+        if current_hidden == 2:
+            return 6 # Equity Deppreciated and Hidden is 2
+        if current_hidden == 3:
+                return 7 # Equity Deppreciated and Hidden is 3
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
@@ -296,22 +275,14 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Equity Appreciated and Hidden is 0 and is in portfolio',
-        "Equity Appreciated and Hidden is 1 and is in portfolio",
-        "Equity Appreciated and Hidden is 2 and is in portfolio",
-        "Equity Appreciated and Hidden is 3 and is in portfolio",
-        'Equity Deppreciated and Hidden is 0 and is in portfolio',
-        "Equity Deppreciated and Hidden is 1 and is in portfolio",
-        "Equity Deppreciated and Hidden is 2 and is in portfolio",
-        "Equity Deppreciated and Hidden is 3 and is in portfolio",
-        'Equity Appreciated and Hidden is 0 and is out of portfolio',
-        "Equity Appreciated and Hidden is 1 and is out of portfolio",
-        "Equity Appreciated and Hidden is 2 and is out of portfolio",
-        "Equity Appreciated and Hidden is 3 and is out of portfolio",
-        'Equity Deppreciated and Hidden is 0 and is out of portfolio',
-        "Equity Deppreciated and Hidden is 1 and is out of portfolio",
-        "Equity Deppreciated and Hidden is 2 and is out of portfolio",
-        "Equity Deppreciated and Hidden is 3 and is out of portfolio"
+        'Equity Appreciated and Hidden is 0',
+        "Equity Appreciated and Hidden is 1",
+        "Equity Appreciated and Hidden is 2",
+        "Equity Appreciated and Hidden is 3",
+        'Equity Deppreciated and Hidden is 0',
+        "Equity Deppreciated and Hidden is 1",
+        "Equity Deppreciated and Hidden is 2",
+        "Equity Deppreciated and Hidden is 3",
         ]
     print q_table
     # Show profits
