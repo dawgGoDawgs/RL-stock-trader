@@ -142,7 +142,7 @@ def choose_trade(pointer, q_table, inPortfolio):
     # return our analytical trade logic decision
     if np.random.uniform() > float(agent.epsilon) or np.count_nonzero(state_actions.values) == 0 or pointer < int(TRADES_TO_RUN):
         print "analytical"
-        return analytic_decision
+        return (analytic_decision, False)
     # Otherwise, return what has been working
     else:
         maximum = state_actions.idxmax()
