@@ -6,7 +6,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .9
 ALPHA = .1
-GAMMA = .3
+GAMMA = .9
 
 # Create agent class
 class Agent:
@@ -304,7 +304,6 @@ Q-table:
         'Equity Deppreciated and Hidden is 0',
         "Equity Deppreciated and Hidden is 1",
         "Equity Deppreciated and Hidden is 2",
-        "Equity Deppreciated and Hidden is 3",
         "Equity Deppreciated and Hidden is 3",
         ]
     print q_table
