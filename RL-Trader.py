@@ -236,6 +236,7 @@ def run():
         if trade == 0:
             n_periods += 1
         reward = 0
+        
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
             if ret >= 0:
