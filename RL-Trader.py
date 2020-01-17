@@ -285,7 +285,7 @@ def run():
             n_periods = 0
             returns.append(ret)
         if reward == 0:
-            reward = 0 if n_periods == 0 else buildReward(n_periods, x, trade_prev, trade, ret)
+            reward = 0 if n_periods == 0 else buildReward(n_periods, ret)
         trade_prev = trade
         # Slows down the script
         time.sleep(.05)
