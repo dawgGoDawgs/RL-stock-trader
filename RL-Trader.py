@@ -159,7 +159,7 @@ def select_state(pointer, inPortfolio, priceAtPurchase):
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
     # return
-    ret = float(priceAtPurchase - current_price) / float(priceAtPurchase)
+    ret = 0 if priceAtPurchase == 0 else float(priceAtPurchase - current_price) / float(priceAtPurchase)
 
     if ret >= 0:
         if current_price > previous_price:
