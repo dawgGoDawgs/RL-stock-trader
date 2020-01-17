@@ -99,7 +99,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 6
+STATES = 12
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -163,20 +163,36 @@ def select_state(pointer):
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
 
-    if current_price > previous_price:
-        if current_hidden == 0:
-            return 0 # Equity Appreciated and Hidden is 0
-        if current_hidden == 1:
-            return 1 # Equity Appreciated and Hidden is 1
-        if current_hidden == 2:
-            return 2 # Equity Appreciated and Hidden is 2
-    if current_price <= previous_price:
-        if current_hidden == 0:
-            return 3 # Equity Deppreciated and Hidden is 0
-        if current_hidden == 1:
-            return 4 # Equity Deppreciated and Hidden is 1
-        if current_hidden == 2:
-            return 5 # Equity Deppreciated and Hidden is 2
+    if current_rf > previous_rf:
+        if current_price > previous_price:
+            if current_hidden == 0:
+                return 0 # Equity Appreciated and Hidden is 0
+            if current_hidden == 1:
+                return 1 # Equity Appreciated and Hidden is 1
+            if current_hidden == 2:
+                return 2 # Equity Appreciated and Hidden is 2
+        if current_price <= previous_price:
+            if current_hidden == 0:
+                return 3 # Equity Deppreciated and Hidden is 0
+            if current_hidden == 1:
+                return 4 # Equity Deppreciated and Hidden is 1
+            if current_hidden == 2:
+                return 5 # Equity Deppreciated and Hidden is 2
+    else:
+        if current_price > previous_price:
+            if current_hidden == 0:
+                return 6 # Equity Appreciated and Hidden is 0
+            if current_hidden == 1:
+                return 7 # Equity Appreciated and Hidden is 1
+            if current_hidden == 2:
+                return 8 # Equity Appreciated and Hidden is 2
+        if current_price <= previous_price:
+            if current_hidden == 0:
+                return 9 # Equity Deppreciated and Hidden is 0
+            if current_hidden == 1:
+                return 10 # Equity Deppreciated and Hidden is 1
+            if current_hidden == 2:
+                return 11 # Equity Deppreciated and Hidden is 2
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
@@ -293,12 +309,18 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Equity Appreciated and Hidden is 0',
-        "Equity Appreciated and Hidden is 1",
-        "Equity Appreciated and Hidden is 2",
-        'Equity Deppreciated and Hidden is 0',
-        "Equity Deppreciated and Hidden is 1",
-        "Equity Deppreciated and Hidden is 2",
+        'Equity Appreciated and Hidden is 0 and rf increasing',
+        "Equity Appreciated and Hidden is 1 and rf increasing",
+        "Equity Appreciated and Hidden is 2 and rf increasing",
+        'Equity Deppreciated and Hidden is 0 and rf increasing',
+        "Equity Deppreciated and Hidden is 1 and rf increasing",
+        "Equity Deppreciated and Hidden is 2 and rf increasing",
+        'Equity Appreciated and Hidden is 0 and rf decreasing',
+        "Equity Appreciated and Hidden is 1 and rf decreasing",
+        "Equity Appreciated and Hidden is 2 and rf decreasing",
+        'Equity Deppreciated and Hidden is 0 and rf decreasing',
+        "Equity Deppreciated and Hidden is 1 and rf decreasing",
+        "Equity Deppreciated and Hidden is 2 and rf decreasing",
         ]
     print q_table
     # Show profits
