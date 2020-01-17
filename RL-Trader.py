@@ -247,7 +247,7 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            reward ＝ curRet / n_periods
+            reward =  curRet / n_periods
             n_periods = 0
             returns.append(ret)
         trade_prev = trade
