@@ -3,7 +3,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .9
 ALPHA = .1
-GAMMA = .3
+GAMMA = .05
 
 # Create agent class
 class Agent:
