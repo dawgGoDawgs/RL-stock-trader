@@ -216,7 +216,7 @@ def buildReward(n_periods, in_trade_prices, trade_prev, trade_cur):
         if trade_prev == 1:
             return 0
     if trade_cur == 1:
-        if trade_prev == 0 
+        if trade_prev == 0:
             ret = float(in_trade_prices[-1] - in_trade_prices[0]) / float(in_trade_prices[0])
             return ret
         if trade_prev == 1:
