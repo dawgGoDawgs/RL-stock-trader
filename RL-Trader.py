@@ -285,6 +285,7 @@ def run():
     if inPortfolio:
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
+    print(returns)
     cum_return = np.cumprod(np.array(returns) + 1)[-1]
     win_rate = float(wins) / float(wins + losses)
     average_periods = np.mean(trade_periods)
