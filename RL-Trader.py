@@ -235,6 +235,7 @@ def run():
         # Determine trade.
         if trade == 0:
             n_periods += 1
+        reward = 0
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
             if ret >= 0:
@@ -242,6 +243,7 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
+            reward ＝ curRet / n_periods
             n_periods = 0
             returns.append(ret)
         trade_prev = trade
@@ -249,7 +251,8 @@ def run():
         time.sleep(.05)
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
-        reward = 0 if n_periods == 0 else curRet / n_periods
+        if reward == 0:
+            reward = 0 if n_periods == 0 else curRet / n_periods
         print "priceAtPurchase:", priceAtPurchase
         print "reward:", reward
         if x == TOTAL_TRADES-1:
