@@ -5,7 +5,7 @@
 
 # Edit these values to change how the RL brain learns
 EPSILON = .8
-ALPHA = .1
+ALPHA = .3
 GAMMA = .3
 
 # Create agent class
@@ -144,9 +144,7 @@ def choose_trade(pointer, q_table, inPortfolio):
         return analytic_decision
     # Otherwise, return what has been working
     else:
-        print state_actions
         maximum = state_actions.idxmax()
-        print maximum
         if str(maximum) == 'buy':
             return 0
         if str(maximum) == 'sell':
