@@ -270,6 +270,13 @@ def run():
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
+        if trade_prev == 0 and trade == 1:
+            # return of option.
+            if - option_price_pct > ret:
+                ret =  - option_price_pct
+                print "Does not exercise call option."
+            else:
+                ret -= option_price_pct
         print 'Return from instance: ' + str(ret)
         # Determine trade.
         if trade == 0:
@@ -278,12 +285,6 @@ def run():
         reward = 0
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
-            # return of option.
-            if - option_price_pct > ret:
-                ret =  - option_price_pct
-                print "Does not exercise call option."
-            else:
-                ret -= option_price_pct
             if ret >= 0:
                 wins += 1
             else:
