@@ -249,6 +249,20 @@ def run():
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
         print 'Return from instance: ' + str(ret)
+        # Slows down the script
+        time.sleep(.05)
+        q_predict = q_table.iloc[cur_state, trade]
+        # If statement for last trade, tweak this
+        reward = ret / n_periods
+        if x == TOTAL_TRADES-1:
+            q_target = reward + float(agent.gamma) * q_table.iloc[cur_state, :
+                    ].max()
+        else:
+            q_target = reward + float(agent.gamma) * q_table.iloc[cur_state, :
+                    ].max()
+        # Append to located cell in Q-Table || Tweak this
+        q_table.iloc[cur_state, trade] += float(agent.alpha) * (q_target
+                - q_predict)
         # Determine trade.
         if trade == 0:
             n_periods += 1
@@ -262,19 +276,6 @@ def run():
             n_periods = 0
             returns.append(ret)
         trade_prev = trade
-        # Slows down the script
-        time.sleep(.05)
-        q_predict = q_table.iloc[cur_state, trade]
-        # If statement for last trade, tweak this
-        if x == TOTAL_TRADES-1:
-            q_target = ret + float(agent.gamma) * q_table.iloc[cur_state, :
-                    ].max()
-        else:
-            q_target = ret + float(agent.gamma) * q_table.iloc[cur_state, :
-                    ].max()
-        # Append to located cell in Q-Table || Tweak this
-        q_table.iloc[cur_state, trade] += float(agent.alpha) * (q_target
-                - q_predict)
         print '\n'
     if inPortfolio:
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
