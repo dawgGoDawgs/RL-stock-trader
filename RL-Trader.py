@@ -273,11 +273,12 @@ def run():
         if trade_prev == 0 and trade == 1:
             # return of option.
             print "orig ret:", ret
-            if -option_price_pct > ret:
+                actual_ret = (1 - option_price_pct) * (1 + ret) - 1
+            if -option_price_pct > actual_ret:
                 ret =  -option_price_pct
                 print "Does not exercise call option."
             else:
-                ret = (1 - option_price_pct) * (1 + ret) - 1
+                ret = actual_ret
         print 'Return from instance: ' + str(ret)
         # Determine trade.
         if trade == 0:
