@@ -24,8 +24,7 @@ def state_logic(pointer, data):
     returns = log(stable_price / price_increase)
     # Tinker with the return threshold as well
     print "pointer:", pointer
-    random_buy_param = 0.1
-    if returns <= 10 or np.random.uniform() < random_buy_param:
+    if returns <= 10:
         return 0  # buy
     if returns > 10:
         return 1  # sell
