@@ -137,6 +137,7 @@ def choose_trade(pointer, q_table, inPortfolio):
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
     print q_table
+    print state_actions
     print np.count_nonzero(q_table) == 0
     if np.random.uniform() > float(agent.epsilon) or np.count_nonzero(q_table) == 0 or pointer < int(TRADES_TO_RUN):
         print "analytical"
