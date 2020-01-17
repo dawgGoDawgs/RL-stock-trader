@@ -6,7 +6,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .8
 ALPHA = .1
-GAMMA = .5
+GAMMA = .1
 stop_loss = -0.01
 
 # Create agent class
