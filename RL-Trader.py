@@ -263,7 +263,7 @@ def run():
     in_trade_prices = []
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
-        trade = choose_trade(x - 1, q_table, inPortfolio)
+        trade = choose_trade(x - 1, q_table, inPortfolio, priceAtPurchase)
         cur_state = select_state(x, inPortfolio)
         print "cur state:", cur_state
         # Find the payoff from the trade
