@@ -8,7 +8,7 @@ EPSILON = .9
 ALPHA = .1
 GAMMA = .3
 
-stop_loss = -0.01
+option_price_pct = 0.005
 
 # Create agent class
 class Agent:
@@ -147,15 +147,7 @@ def choose_trade(pointer, q_table, inPortfolio):
     # Otherwise, return what has been working
     else:
         maximum = state_actions.idxmax()
-        # check stop_loss
-        trigger_stop = False
-        if inPortfolio:
-            price_cur = data["EQUITY"][pointer  + 1]
-            ret = (price_cur - priceAtPurchase) / priceAtPurchase
-            trigger_stop = ret <= stop_loss
-            if trigger_stop:
-                print "trigger stop"
-        if str(maximum) == 'sell' or trigger_stop:
+        if str(maximum) == 'sell':
             return 1
         if str(maximum) == 'buy':
             return 0
@@ -277,6 +269,9 @@ def run():
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
+        if - option_price_pct > ret
+            ret =  - option_price_pct
+            print "Does not exercise call option."
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
