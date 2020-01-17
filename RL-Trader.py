@@ -253,7 +253,7 @@ def run():
         time.sleep(.05)
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
-        reward = ret / n_periods
+        reward = 0 if n_periods == 0 or ret / n_periods
         if x == TOTAL_TRADES-1:
             q_target = reward + float(agent.gamma) * q_table.iloc[cur_state, :
                     ].max()
