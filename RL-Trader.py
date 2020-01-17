@@ -136,6 +136,9 @@ def choose_trade(pointer, q_table, inPortfolio):
     # If the greedy factor is less than a randomly distributed number, if there are no values
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
+    print np.random.uniform()
+    print state_actions.all() == 0
+    print int(TRADES_TO_RUN)
     if np.random.uniform() > float(agent.epsilon) or state_actions.all() == 0 or pointer < int(TRADES_TO_RUN):
         print "analytical"
         return analytic_decision
@@ -293,14 +296,14 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Equity Appreciated and Hidden is 0 and is in of portfolio',
-        "Equity Appreciated and Hidden is 1 and is in of portfolio",
-        "Equity Appreciated and Hidden is 2 and is in of portfolio",
-        "Equity Appreciated and Hidden is 3 and is in of portfolio",
-        'Equity Deppreciated and Hidden is 0 and is in of portfolio',
-        "Equity Deppreciated and Hidden is 1 and is in of portfolio",
-        "Equity Deppreciated and Hidden is 2 and is in of portfolio",
-        "Equity Deppreciated and Hidden is 3 and is in of portfolio",
+        'Equity Appreciated and Hidden is 0 and is in portfolio',
+        "Equity Appreciated and Hidden is 1 and is in portfolio",
+        "Equity Appreciated and Hidden is 2 and is in portfolio",
+        "Equity Appreciated and Hidden is 3 and is in portfolio",
+        'Equity Deppreciated and Hidden is 0 and is in portfolio',
+        "Equity Deppreciated and Hidden is 1 and is in portfolio",
+        "Equity Deppreciated and Hidden is 2 and is in portfolio",
+        "Equity Deppreciated and Hidden is 3 and is in portfolio",
         'Equity Appreciated and Hidden is 0 and is out of portfolio',
         "Equity Appreciated and Hidden is 1 and is out of portfolio",
         "Equity Appreciated and Hidden is 2 and is out of portfolio",
