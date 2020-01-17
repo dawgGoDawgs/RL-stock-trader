@@ -211,17 +211,15 @@ def buildReward(n_periods, in_trade_prices, trade_prev, trade_cur):
     risk = (pd.Series(in_trade_prices) / in_trade_prices[0]).std()
     if trade_cur == 0:
         if trade_prev == 0:
-            ret_cur = float(in_trade_prices[-1] - in_trade_prices[-2]) / float(in_trade_prices[-2])
-            return ret_cur - risk
+            return 0
         if trade_prev == 1:
             return 0
     if trade_cur == 1:
         if trade_prev == 0:
             ret = float(in_trade_prices[-1] - in_trade_prices[0]) / float(in_trade_prices[0])
-            return ret
+            return ret - risk
         if trade_prev == 1:
-            ret_cur = float(in_trade_prices[-1] - in_trade_prices[-2]) / float(in_trade_prices[-2])
-            return - ret_cur + risk
+            return 0
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
@@ -243,7 +241,6 @@ def run():
     in_trade_prices = []
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
-        print "inPorfolio:", inPortfolio
         trade = choose_trade(x - 1, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
         print "cur state:", cur_state
