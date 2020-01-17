@@ -99,7 +99,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 8
+STATES = 16
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -156,27 +156,51 @@ def select_state(pointer, inPortfolio):
     current_price = data['EQUITY'][pointer]
     # Find the previous price of the equity
     previous_price = data['EQUITY'][pointer - 1]
+    # Find the current risk free rate
+    current_rf = data["RF"][pointer]
+    # Find the previous risk free rate
+    previous_rf = data["RF"][pointer - 1]
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
 
-    if current_price > previous_price:
-        if current_hidden == 0:
-            return 0 # Equity Appreciated and Hidden is 0
-        if current_hidden == 1:
-            return 1 # Equity Appreciated and Hidden is 1
-        if current_hidden == 2:
-            return 2 # Equity Appreciated and Hidden is 2
-        if current_hidden == 3:
-            return 3 # Equity Appreciated and Hidden is 3
-    if current_price <= previous_price:
-        if current_hidden == 0:
-            return 4 # Equity Deppreciated and Hidden is 0
-        if current_hidden == 1:
-            return 5 # Equity Deppreciated and Hidden is 1
-        if current_hidden == 2:
-            return 6 # Equity Deppreciated and Hidden is 2
-        if current_hidden == 3:
-            return 7 # Equity Deppreciated and Hidden is 3
+    if current_rf > previous_rf:
+        if current_price > previous_price:
+            if current_hidden == 0:
+                return 0 # Equity Appreciated and Hidden is 0
+            if current_hidden == 1:
+                return 1 # Equity Appreciated and Hidden is 1
+            if current_hidden == 2:
+                return 2 # Equity Appreciated and Hidden is 2
+            if current_hidden == 3:
+                return 3 # Equity Appreciated and Hidden is 3
+        if current_price <= previous_price:
+            if current_hidden == 0:
+                return 4 # Equity Deppreciated and Hidden is 0
+            if current_hidden == 1:
+                return 5 # Equity Deppreciated and Hidden is 1
+            if current_hidden == 2:
+                return 6 # Equity Deppreciated and Hidden is 2
+            if current_hidden == 3:
+                return 7 # Equity Deppreciated and Hidden is 3
+    else:
+        if current_price > previous_price:
+            if current_hidden == 0:
+                return 8 # Equity Appreciated and Hidden is 0
+            if current_hidden == 1:
+                return 9 # Equity Appreciated and Hidden is 1
+            if current_hidden == 2:
+                return 10 # Equity Appreciated and Hidden is 2
+            if current_hidden == 3:
+                return 11 # Equity Appreciated and Hidden is 3
+        if current_price <= previous_price:
+            if current_hidden == 0:
+                return 12 # Equity Deppreciated and Hidden is 0
+            if current_hidden == 1:
+                return 13 # Equity Deppreciated and Hidden is 1
+            if current_hidden == 2:
+                return 14 # Equity Deppreciated and Hidden is 2
+            if current_hidden == 3:
+                return 15 # Equity Deppreciated and Hidden is 3
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
@@ -207,7 +231,7 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0.0, inPortfolio)
  
 # aim for profit and stability.
-def buildReward(n_periods, pointer, trade_prev, trade_cur, ret):
+def buildReward(n_periods, ret):
     if trade_cur == 0:
         if trade_prev == 0:
             return 0
@@ -257,7 +281,7 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            reward =  buildReward(n_periods, x, trade_prev, trade, ret)
+            reward =  buildReward(n_periods, ret)
             n_periods = 0
             returns.append(ret)
         if reward == 0:
@@ -293,14 +317,22 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Equity Appreciated and Hidden is 0',
-        "Equity Appreciated and Hidden is 1",
-        "Equity Appreciated and Hidden is 2",
-        "Equity Appreciated and Hidden is 3",
-        'Equity Deppreciated and Hidden is 0',
-        "Equity Deppreciated and Hidden is 1",
-        "Equity Deppreciated and Hidden is 2",
-        "Equity Deppreciated and Hidden is 3",
+        'Equity Appreciated and Hidden is 0 and rf is increasing',
+        "Equity Appreciated and Hidden is 1 and rf is increasing",
+        "Equity Appreciated and Hidden is 2 and rf is increasing",
+        "Equity Appreciated and Hidden is 3 and rf is increasing",
+        'Equity Deppreciated and Hidden is 0 and rf is increasing',
+        "Equity Deppreciated and Hidden is 1 and rf is increasing",
+        "Equity Deppreciated and Hidden is 2 and rf is increasing",
+        "Equity Deppreciated and Hidden is 3 and rf is increasing",
+        'Equity Appreciated and Hidden is 0 and rf is decreasing',
+        "Equity Appreciated and Hidden is 1 and rf is decreasing",
+        "Equity Appreciated and Hidden is 2 and rf is decreasing",
+        "Equity Appreciated and Hidden is 3 and rf is decreasing",
+        'Equity Deppreciated and Hidden is 0 and rf is decreasing',
+        "Equity Deppreciated and Hidden is 1 and rf is decreasing",
+        "Equity Deppreciated and Hidden is 2 and rf is decreasing",
+        "Equity Deppreciated and Hidden is 3 and rf is decreasing",
         ]
     print q_table
     # Show profits
