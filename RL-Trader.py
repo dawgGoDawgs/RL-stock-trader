@@ -94,7 +94,7 @@ col_mean = np.nanmean(X, axis=0)
 inds = np.where(np.isnan(X))
 X[inds] = np.take(col_mean, inds[1])
 # Make an HMM instance and execute fit
-num_components = 4
+num_components = 3
 model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=1000).fit(X_train)
 hidden_states = model.predict(X)
 
