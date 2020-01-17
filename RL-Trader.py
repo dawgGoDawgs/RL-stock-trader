@@ -231,7 +231,7 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0.0, inPortfolio)
  
 # aim for profit and stability.
-def buildReward(n_periods, ret):
+def buildReward(n_periods, trade_prev, trade_cur, ret):
     if trade_cur == 0:
         if trade_prev == 0:
             return 0
@@ -281,11 +281,11 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            reward =  buildReward(n_periods, ret)
+            reward =  buildReward(n_periods, trade_prev, trade, ret)
             n_periods = 0
             returns.append(ret)
         if reward == 0:
-            reward = 0 if n_periods == 0 else buildReward(n_periods, ret)
+            reward = 0 if n_periods == 0 else buildReward(n_periods, trade_prev, trade, ret)
         trade_prev = trade
         # Slows down the script
         time.sleep(.05)
