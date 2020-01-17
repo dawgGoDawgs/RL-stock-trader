@@ -6,7 +6,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .9
 ALPHA = .1
-GAMMA = 1.0
+GAMMA = .3
 
 # Create agent class
 class Agent:
@@ -144,10 +144,11 @@ def choose_trade(pointer, q_table, inPortfolio):
         return analytic_decision
     # Otherwise, return what has been working
     else:
-        maximum = state_actions.idxmax()
-        if str(maximum) == 'buy':
-            return 0
-        if str(maximum) == 'sell':
+        probs = state_actions / sum(state_actions)
+        print "probs:", probs
+        if np.random.uniform() < probs[0]:
+            return 0 # buy
+        else:
             return 1
 
 # Selects the state on the Q-Table
@@ -217,7 +218,8 @@ def buildReward(n_periods, in_trade_prices, trade_prev, trade_cur):
     if trade_cur == 1:
         if trade_prev == 0:
             ret = float(in_trade_prices[-1] - in_trade_prices[0]) / float(in_trade_prices[0])
-            return ret - risk
+            reward = np.abs(1 + ret - risk)
+            return reward
         if trade_prev == 1:
             return 0
 
