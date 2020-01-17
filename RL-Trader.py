@@ -269,7 +269,7 @@ def run():
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
-        if - option_price_pct > ret
+        if - option_price_pct > ret:
             ret =  - option_price_pct
             print "Does not exercise call option."
         # Display to user
