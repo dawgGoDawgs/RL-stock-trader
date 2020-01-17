@@ -272,6 +272,8 @@ def run():
         if - option_price_pct > ret:
             ret =  - option_price_pct
             print "Does not exercise call option."
+        else:
+            ret -= option_price_pct
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
