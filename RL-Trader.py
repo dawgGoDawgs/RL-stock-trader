@@ -3,7 +3,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .9
 ALPHA = .1
-GAMMA = .05
+GAMMA = .5
 
 # Create agent class
 class Agent:
@@ -137,6 +137,7 @@ def choose_trade(pointer, q_table):
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
     if np.random.uniform() > float(agent.epsilon) or state_actions.all() == 0 or pointer < int(TRADES_TO_RUN):
+        print "analytical"
         return analytic_decision
     # Otherwise, return what has been working
     else:
