@@ -96,7 +96,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 8
+STATES = 16
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -152,27 +152,55 @@ def select_state(pointer):
     current_price = data['EQUITY'][pointer]
     # Find the previous price of the equity
     previous_price = data['EQUITY'][pointer - 1]
+    # Find the current market volatility
+    current_vol = data['SIGMA'][pointer]
+    # Find the previous market volatility
+    previous_vol = data['SIGMA'][pointer - 1]
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
 
     if current_price > previous_price:
         if current_hidden == 0:
-            return 0 # Equity Appreciated and Hidden is 0
+            if current_vol > previous_vol:
+                return 0 # Equity Appreciated and Hidden is 0 and market vol increasing
+            if current_vol <= previous_vol:
+                return 1 # Equity Appreciated and Hidden is 0 and market vol decreasing
         if current_hidden == 1:
-            return 1 # Equity Appreciated and Hidden is 1
+            if current_vol > previous_vol:
+                return 2 # Equity Appreciated and Hidden is 1 and market vol increasing
+            if current_vol <= previous_vol:
+                return 3 # Equity Appreciated and Hidden is 1 and market vol decreasing
         if current_hidden == 2:
-            return 2 # Equity Appreciated and Hidden is 2
+            if current_vol > previous_vol:
+                return 4 # Equity Appreciated and Hidden is 2 and market vol increasing
+            if current_vol <= previous_vol:
+                return 5 # Equity Appreciated and Hidden is 2 and market vol decreasing
         if current_hidden == 3:
-            return 3 # Equity Appreciated and Hidden is 3
+            if current_vol > previous_vol:
+                return 6 # Equity Appreciated and Hidden is 3 and market vol increasing
+            if current_vol <= previous_vol:
+                return 7 # Equity Appreciated and Hidden is 3 and market vol decreasing
     if current_price <= previous_price:
         if current_hidden == 0:
-            return 4 # Equity Deppreciated and Hidden is 0
+            if current_vol > previous_vol:
+                return 8 # Equity Deppreciated and Hidden is 0 and market vol increasing
+            if current_vol <= previous_vol:
+                return 9 # Equity Deppreciated and Hidden is 0 and market vol decreasing
         if current_hidden == 1:
-            return 5 # Equity Deppreciated and Hidden is 1
+            if current_vol > previous_vol:
+                return 10 # Equity Deppreciated and Hidden is 1 and market vol increasing
+            if current_vol <= previous_vol:
+                return 11 # Equity Deppreciated and Hidden is 1 and market vol decreasing
         if current_hidden == 2:
-            return 6 # Equity Deppreciated and Hidden is 2
+            if current_vol > previous_vol:
+                return 12 # Equity Deppreciated and Hidden is 2 and market vol increasing
+            if current_vol <= previous_vol:
+                return 13 # Equity Deppreciated and Hidden is 2 and market vol decreasing
         if current_hidden == 3:
-            return 7 # Equity Deppreciated and Hidden is 3
+            if current_vol > previous_vol:
+                return 14 # Equity Deppreciated and Hidden is 3 and market vol increasing
+            if current_vol <= previous_vol:
+                return 15 # Equity Deppreciated and Hidden is 3 and market vol decreasing
 
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
@@ -271,14 +299,22 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Equity Appreciated and Hidden is 0',
-        "Equity Appreciated and Hidden is 1",
-        "Equity Appreciated and Hidden is 2",
-        "Equity Appreciated and Hidden is 3",
-        'Equity Deppreciated and Hidden is 0',
-        "Equity Deppreciated and Hidden is 1",
-        "Equity Deppreciated and Hidden is 2",
-        "Equity Deppreciated and Hidden is 3"
+        'Equity Appreciated and Hidden is 0 and market vol increasing',
+        'Equity Appreciated and Hidden is 0 and market vol decreasing',
+        "Equity Appreciated and Hidden is 1 and market vol increasing",
+        "Equity Appreciated and Hidden is 1 and market vol decreasing",
+        "Equity Appreciated and Hidden is 2 and market vol increasing",
+        "Equity Appreciated and Hidden is 2 and market vol decreasing",
+        "Equity Appreciated and Hidden is 3 and market vol increasing",
+        "Equity Appreciated and Hidden is 3 and market vol decreasing",
+        'Equity Deppreciated and Hidden is 0 and market vol increasing',
+        'Equity Deppreciated and Hidden is 0 and market vol decreasing',
+        "Equity Deppreciated and Hidden is 1 and market vol increasing",
+        "Equity Deppreciated and Hidden is 1 and market vol decreasing",
+        "Equity Deppreciated and Hidden is 2 and market vol increasing",
+        "Equity Deppreciated and Hidden is 2 and market vol decreasing",
+        "Equity Deppreciated and Hidden is 3 and market vol increasing",
+        "Equity Deppreciated and Hidden is 3 and market vol decreasing"
         ]
     print q_table
     # Show profits
