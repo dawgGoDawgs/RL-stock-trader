@@ -222,8 +222,8 @@ def determine_payoff(pointer, trade, inPortfolio, trigger_stop):
         if trade == 0:  # Buy the equity
             inPortfolio = True  # Add it to the portfolio
             print '** Equity bought at $' + str(round(data['EQUITY'
-                    ][pointer], 2))  # Display Price Equity was purchased at
-            priceAtPurchase = data['EQUITY'][pointer]  # Record the price at which the Equity was purchased
+                    ][pointer - 1], 2))  # Display Price Equity was purchased at
+            priceAtPurchase = data['EQUITY'][pointer - 1]  # Record the price at which the Equity was purchased
             return (0.0, inPortfolio)
         if trade == 1:  # Sell
             inPortfolio = False
