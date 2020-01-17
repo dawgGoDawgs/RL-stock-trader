@@ -145,7 +145,6 @@ def choose_trade(pointer, q_table, inPortfolio):
     # Otherwise, return what has been working
     else:
         probs = state_actions / sum(state_actions)
-        print "probs:", probs
         if np.random.uniform() < probs[0]:
             return 0 # buy
         else:
