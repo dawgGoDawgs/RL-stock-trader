@@ -8,6 +8,8 @@ EPSILON = .9
 ALPHA = .1
 GAMMA = .3
 
+stop_loss = -0.01
+
 # Create agent class
 class Agent:
     def __init__(self, alpha_input, epsilon_input, gamma_input):
@@ -145,10 +147,16 @@ def choose_trade(pointer, q_table, inPortfolio):
     # Otherwise, return what has been working
     else:
         maximum = state_actions.idxmax()
+        # check stop_loss
+        trigger_stop = False
+        if inPortfolio:
+            price_cur = data["EQUITY"][pointer]
+            ret = (price_cur - priceAtPurchase) / priceAtPurchase
+            trigger_stop = ret <= stop_loss
+        if str(maximum) == 'sell' or trigger_stop:
+            return 1
         if str(maximum) == 'buy':
             return 0
-        if str(maximum) == 'sell':
-            return 1
 
 # Selects the state on the Q-Table
 def select_state(pointer, inPortfolio):
