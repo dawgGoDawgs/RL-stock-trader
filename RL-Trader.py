@@ -210,7 +210,7 @@ def determine_payoff(pointer, trade, inPortfolio):
 def buildReward(ret, n_periods, in_trade_prices):
     pct = pd.Series(in_trade_prices).pct_change()
     risk = 0.1 * pct.std()
-    return ret/n_periods - risk
+    return ret/n_periods
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
