@@ -224,16 +224,7 @@ def determine_payoff(pointer, trade, inPortfolio):
  
 # aim for profit and stability.
 def buildReward(n_periods, trade_prev, trade_cur, ret):
-    if trade_cur == 0:
-        if trade_prev == 0:
-            return 0
-        if trade_prev == 1:
-            return 0
-    if trade_cur == 1:
-        if trade_prev == 0:
-            return ret
-        if trade_prev == 1:
-            return 0
+    return ret
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
@@ -277,8 +268,6 @@ def run():
             reward = buildReward(n_periods, trade_prev, trade, ret)
             n_periods = 0
             returns.append(ret)
-        if reward == 0:
-            reward = 0 if n_periods == 0 else buildReward(n_periods, trade_prev, trade, ret)
         trade_prev = trade
         # Slows down the script
         q_predict = q_table.iloc[cur_state, trade]
