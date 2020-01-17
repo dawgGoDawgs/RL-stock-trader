@@ -150,11 +150,12 @@ def choose_trade(pointer, q_table, inPortfolio):
         price_next = data["EQUITY"][pointer + 1]
         ret_next = (price_next - priceAtPurchase) / priceAtPurchase
         if str(maximum) == 'sell' or (ret_next < stop_loss and inPortfolio):
+            trigger_stop = ret_next < stop_loss and inPortfolio
             if ret_next < stop_loss:
                 print "trigger stop"
-            return 1
+            return (1, trigger_stop)
         if str(maximum) == 'buy':
-            return 0
+            return (0, False)
 
 # Selects the state on the Q-Table
 def select_state(pointer):
@@ -200,7 +201,7 @@ def select_state(pointer):
             if current_hidden == 2:
                 return 11 # Equity Deppreciated and Hidden is 2
 # Function to find the profit from trades
-def determine_payoff(pointer, trade, inPortfolio):
+def determine_payoff(pointer, trade, inPortfolio, trigger_stop):
     # Hold the value that the equity was purchased at
     global priceAtPurchase
     if inPortfolio:  # Stock is already owned
@@ -213,7 +214,7 @@ def determine_payoff(pointer, trade, inPortfolio):
         if trade == 1:  # Sell the Equity
             inPortfolio = False  # Remove Equity from portfolio
             ret = float(data['EQUITY'][pointer] - priceAtPurchase) / float(priceAtPurchase)
-            ret = stop_loss if ret < stop_loss else ret
+            ret = stop_loss if trigger_stop else ret
             print '** Equity sold at $' + str(round(data['EQUITY'
                     ][pointer], 2))
             return (ret, inPortfolio)
@@ -253,12 +254,12 @@ def run():
     n_periods = 0
     for x in range(1, TOTAL_TRADES):
         # RL Agent chooses the trade
-        trade = choose_trade(x - 1, q_table, inPortfolio)
+        trade, trigger_stop = choose_trade(x - 1, q_table, inPortfolio)
         cur_state = select_state(x-1)
         next_state = select_state(x)
         print "cur state:", cur_state
         # Find the payoff from the trade
-        ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
+        ret, inPortfolio = determine_payoff(x, trade, inPortfolio, trigger_stop)
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
