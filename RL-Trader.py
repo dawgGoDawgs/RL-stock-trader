@@ -229,7 +229,7 @@ def run():
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
-        curRet = float(data['EQUITY'][x] - priceAtPurchase)
+        curRet = float(data['EQUITY'][x] - priceAtPurchase) / float(priceAtPurchase)
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
@@ -250,6 +250,7 @@ def run():
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
         reward = 0 if n_periods == 0 else curRet / n_periods
+        print "priceAtPurchase:", priceAtPurchase
         print "reward:", reward
         if x == TOTAL_TRADES-1:
             q_target = reward + float(agent.gamma) * q_table.iloc[cur_state, :
