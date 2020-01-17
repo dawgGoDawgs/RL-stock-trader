@@ -219,7 +219,7 @@ def buildReward(n_periods, trade_prev, trade_cur, ret):
             return 0
     if trade_cur == 1:
         if trade_prev == 0:
-            return ret / n_periods
+            return ret
         if trade_prev == 1:
             return 0
 
