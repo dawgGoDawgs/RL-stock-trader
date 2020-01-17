@@ -207,20 +207,23 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0.0, inPortfolio)
  
 # aim for profit and stability.
-def buildReward(n_periods, in_trade_prices, trade_prev, trade_cur):
-    risk = (pd.Series(in_trade_prices) / in_trade_prices[0]).std()
+def buildReward(n_periods, pointer, trade_prev, trade_cur):
     if trade_cur == 0:
         if trade_prev == 0:
-            return 0
+            price_cur = data["EQUITY"][pointer]
+            price_prev = data["EQUITY"][pointer - 1]
+            ret_cur = float(price_cur - price_prev) / float(price_prev)
+            return ret_cur
         if trade_prev == 1:
             return 0
     if trade_cur == 1:
+        price_cur = data["EQUITY"][pointer]
+        price_prev = data["EQUITY"][pointer - 1]
+        ret_cur = float(price_cur - price_prev) / float(price_prev)
         if trade_prev == 0:
-            ret = float(in_trade_prices[-1] - in_trade_prices[0]) / float(in_trade_prices[0])
-            reward = np.abs(1 + ret - risk)
-            return reward
+            return ret_cur
         if trade_prev == 1:
-            return 0
+            return - ret_cur
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
@@ -239,7 +242,6 @@ def run():
     wins = 0
     losses = 0
     n_periods = 0
-    in_trade_prices = []
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table, inPortfolio)
@@ -251,7 +253,6 @@ def run():
         print 'Return from instance: ' + str(ret)
         # Determine trade.
         if trade == 0:
-            in_trade_prices.append(data["EQUITY"][x])
             n_periods += 1
         
         reward = 0
@@ -262,12 +263,11 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            in_trade_prices.append(data["EQUITY"][x])
-            reward =  buildReward(n_periods, in_trade_prices, trade_prev, trade)
+            reward =  buildReward(n_periods, x, trade_prev, trade)
             n_periods = 0
             returns.append(ret)
         if reward == 0:
-            reward = 0 if n_periods == 0 else buildReward(n_periods, in_trade_prices, trade_prev, trade)
+            reward = 0 if n_periods == 0 else buildReward(n_periods, x, trade_prev, trade)
         trade_prev = trade
         # Slows down the script
         time.sleep(.05)
