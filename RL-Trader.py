@@ -99,7 +99,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 8
+STATES = 6
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -170,17 +170,13 @@ def select_state(pointer):
             return 1 # Equity Appreciated and Hidden is 1
         if current_hidden == 2:
             return 2 # Equity Appreciated and Hidden is 2
-        if current_hidden == 3:
-            return 3 # Equity Appreciated and Hidden is 3
     if current_price <= previous_price:
         if current_hidden == 0:
-            return 4 # Equity Deppreciated and Hidden is 0
+            return 3 # Equity Deppreciated and Hidden is 0
         if current_hidden == 1:
-            return 5 # Equity Deppreciated and Hidden is 1
+            return 4 # Equity Deppreciated and Hidden is 1
         if current_hidden == 2:
-            return 6 # Equity Deppreciated and Hidden is 2
-        if current_hidden == 3:
-            return 7 # Equity Deppreciated and Hidden is 3
+            return 5 # Equity Deppreciated and Hidden is 2
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
@@ -299,11 +295,9 @@ Q-table:
         'Equity Appreciated and Hidden is 0',
         "Equity Appreciated and Hidden is 1",
         "Equity Appreciated and Hidden is 2",
-        "Equity Appreciated and Hidden is 3",
         'Equity Deppreciated and Hidden is 0',
         "Equity Deppreciated and Hidden is 1",
         "Equity Deppreciated and Hidden is 2",
-        "Equity Deppreciated and Hidden is 3"
         ]
     print q_table
     # Show profits
