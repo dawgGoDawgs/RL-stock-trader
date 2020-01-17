@@ -6,7 +6,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .8
 ALPHA = .1
-GAMMA = .3
+GAMMA = .9
 stop_loss = -0.01
 
 # Create agent class
@@ -149,9 +149,9 @@ def choose_trade(pointer, q_table, inPortfolio):
         # set stop loss
         price_next = data["EQUITY"][pointer + 1]
         ret_next = (price_next - priceAtPurchase) / priceAtPurchase
-        if str(maximum) == 'sell' or (ret_next < stop_loss and inPortfolio):
-            trigger_stop = ret_next < stop_loss and inPortfolio
-            if ret_next < stop_loss:
+        trigger_stop = ret_next < stop_loss and inPortfolio
+        if str(maximum) == 'sell' or trigger_stop:
+            if trigger_stop:
                 print "trigger stop"
             return 1
         if str(maximum) == 'buy':
