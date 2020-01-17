@@ -8,7 +8,7 @@ EPSILON = .9
 ALPHA = .1
 GAMMA = .3
 
-option_price_pct = 0.005
+option_price_pct = 0.01
 
 # Create agent class
 class Agent:
@@ -241,7 +241,7 @@ def buildReward(n_periods, trade_prev, trade_cur, ret):
             return 0
     if trade_cur == 1:
         if trade_prev == 0:
-            return ret
+            return ret / n_periods
         if trade_prev == 1:
             return 0
 
