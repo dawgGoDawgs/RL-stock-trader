@@ -5,8 +5,8 @@
 
 # Edit these values to change how the RL brain learns
 EPSILON = .9
-ALPHA = .1
-GAMMA = .5
+ALPHA = .3
+GAMMA = .3
 
 # Create agent class
 class Agent:
@@ -261,14 +261,13 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            reward =  buildReward(n_periods, trade_prev, trade, ret)
+            reward = buildReward(n_periods, trade_prev, trade, ret)
             n_periods = 0
             returns.append(ret)
         if reward == 0:
             reward = 0 if n_periods == 0 else buildReward(n_periods, trade_prev, trade, ret)
         trade_prev = trade
         # Slows down the script
-        time.sleep(.05)
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
