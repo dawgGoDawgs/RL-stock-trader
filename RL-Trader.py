@@ -206,9 +206,10 @@ def determine_payoff(pointer, trade, inPortfolio):
                     ][pointer], 2))
             return (0.0, inPortfolio)
  
+# aim for profit and stability.
 def buildReward(ret, n_periods, in_trade_prices):
     pct = pd.Series(in_trade_prices).pct_change()
-    risk = pct.std()
+    risk = 0.1 * pct.std()
     return ret/n_periods - risk
 
 # Global variables will be moved into a profit class at next commit
@@ -261,7 +262,6 @@ def run():
         time.sleep(.05)
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
-        print "reward:", reward
         if x == TOTAL_TRADES-1:
             q_target = reward + float(agent.gamma) * q_table.iloc[cur_state, :
                     ].max()
