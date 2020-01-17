@@ -272,7 +272,7 @@ def run():
         # Display to user
         if trade_prev == 0 and trade == 1:
             # return of option.
-            if - option_price_pct > ret:
+            if - option_price_pct < ret:
                 ret =  - option_price_pct
                 print "Does not exercise call option."
             else:
