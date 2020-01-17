@@ -25,9 +25,9 @@ def state_logic(pointer, data):
     # Tinker with the return threshold as well
     print "pointer:", pointer
     if returns <= 10:
-        return 0  # buy
-    if returns > 10:
         return 1  # sell
+    if returns > 10:
+        return 0  # buy
 
 # Black-Scholes Model function needed for our current state logic
 def calculate_BSM(
