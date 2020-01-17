@@ -206,6 +206,10 @@ def determine_payoff(pointer, trade, inPortfolio):
                     ][pointer], 2))
             return (0.0, inPortfolio)
  
+def buildReward(ret, n_periods, in_trade_prices):
+    pct = pd.Series(in_trade_prices).pct_change()
+    risk = pct.std()
+    return ret/n_periods - risk
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
@@ -224,6 +228,7 @@ def run():
     wins = 0
     losses = 0
     n_periods = 0
+    in_trade_prices = []
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         print "inPorfolio:", inPortfolio
@@ -236,6 +241,7 @@ def run():
         print 'Return from instance: ' + str(ret)
         # Determine trade.
         if trade == 0:
+            in_trade_prices.append(data["EQUITY"][x])
             n_periods += 1
         
         reward = 0
@@ -246,7 +252,8 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            reward =  ret / n_periods
+            in_trade_prices.append(data["EQUITY"][x])
+            reward =  buildReward(ret, n_periods, in_trade_prices)
             n_periods = 0
             returns.append(ret)
         trade_prev = trade
@@ -254,8 +261,6 @@ def run():
         time.sleep(.05)
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
-        if reward == 0:
-            reward = 0 if n_periods == 0 else ret / n_periods
         print "reward:", reward
         if x == TOTAL_TRADES-1:
             q_target = reward + float(agent.gamma) * q_table.iloc[cur_state, :
