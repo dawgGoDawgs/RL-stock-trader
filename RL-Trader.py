@@ -141,6 +141,7 @@ def choose_trade(pointer, q_table, inPortfolio):
         return analytic_decision
     # Otherwise, return what has been working
     else:
+        print state_actions
         maximum = state_actions.idxmax()
         if str(maximum) == 'buy':
             return 0
