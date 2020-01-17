@@ -135,7 +135,7 @@ def choose_trade(pointer, q_table, inPortfolio):
     # Find the trade decision from our trade logic
     analytic_decision = state_logic(pointer, data)
     # Select state from Q-Table
-    state_actions = q_table.iloc[select_state(pointer, inPortfolio), :]
+    state_actions = q_table.iloc[select_state(pointer), :]
     # If the greedy factor is less than a randomly distributed number, if there are no values
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
@@ -151,7 +151,7 @@ def choose_trade(pointer, q_table, inPortfolio):
             return 0
 
 # Selects the state on the Q-Table
-def select_state(pointer, inPortfolio):
+def select_state(pointer):
     # Find the current price of the equity
     current_price = data['EQUITY'][pointer]
     # Find the previous price of the equity
@@ -243,7 +243,7 @@ def run():
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table, inPortfolio)
-        cur_state = select_state(x, inPortfolio)
+        cur_state = select_state(x)
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
