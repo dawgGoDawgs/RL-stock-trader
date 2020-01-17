@@ -149,7 +149,7 @@ def choose_trade(pointer, q_table, inPortfolio):
         # set stop loss
         price_next = data["EQUITY"][pointer + 1]
         ret_next = (price_next - priceAtPurchase) / priceAtPurchase
-        if str(maximum) == 'sell' or if ret_next < stop_loss:
+        if str(maximum) == 'sell' or ret_next < stop_loss:
             if ret_next < stop_loss:
                 print "trigger stop"
             return 1
