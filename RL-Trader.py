@@ -1,7 +1,7 @@
 # Reinforcement Learning Equity Trader
 
 # Edit these values to change how the RL brain learns
-EPSILON = .9
+EPSILON = .3
 ALPHA = .1
 GAMMA = .5
 
