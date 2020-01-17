@@ -201,7 +201,7 @@ def select_state(pointer):
             if current_hidden == 2:
                 return 11 # Equity Deppreciated and Hidden is 2
 # Function to find the profit from trades
-def determine_payoff(pointer, trade, inPortfolio, trigger_stop):
+def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
     global priceAtPurchase
     if inPortfolio:  # Stock is already owned
