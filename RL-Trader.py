@@ -299,7 +299,7 @@ Q-table:
         'Equity Deppreciated and Hidden is 0 and is in of portfolio',
         "Equity Deppreciated and Hidden is 1 and is in of portfolio",
         "Equity Deppreciated and Hidden is 2 and is in of portfolio",
-        "Equity Deppreciated and Hidden is 3 and is in of portfolio"
+        "Equity Deppreciated and Hidden is 3 and is in of portfolio",
         'Equity Appreciated and Hidden is 0 and is out of portfolio',
         "Equity Appreciated and Hidden is 1 and is out of portfolio",
         "Equity Appreciated and Hidden is 2 and is out of portfolio",
