@@ -229,7 +229,7 @@ def run():
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
-        curRet = float(data['EQUITY'][pointer] - priceAtPurchase)
+        curRet = float(data['EQUITY'][x] - priceAtPurchase)
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Slows down the script
