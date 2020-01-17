@@ -207,8 +207,9 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0.0, inPortfolio)
  
 # aim for profit and stability.
-def buildReward(ret, n_periods, in_trade_prices):
+def buildReward(n_periods, in_trade_prices):
     risk = (pd.Series(in_trade_prices) / in_trade_prices[0]).std()
+    ret = float(in_trade_prices[-1] - in_trade_prices[0]) / float(in_trade_prices[0])
     return ret / n_periods - risk
 
 # Global variables will be moved into a profit class at next commit
@@ -253,9 +254,11 @@ def run():
                 losses += 1
             trade_periods.append(n_periods)
             in_trade_prices.append(data["EQUITY"][x])
-            reward =  buildReward(ret, n_periods, in_trade_prices)
+            reward =  buildReward(n_periods, in_trade_prices)
             n_periods = 0
             returns.append(ret)
+        if reward == 0:
+            reward = 0 if n_periods == 0 else buildReward(n_periods, in_trade_prices)
         trade_prev = trade
         # Slows down the script
         time.sleep(.05)
