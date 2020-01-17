@@ -207,23 +207,17 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0.0, inPortfolio)
  
 # aim for profit and stability.
-def buildReward(n_periods, pointer, trade_prev, trade_cur):
+def buildReward(n_periods, pointer, trade_prev, trade_cur, ret):
     if trade_cur == 0:
         if trade_prev == 0:
-            price_cur = data["EQUITY"][pointer]
-            price_prev = data["EQUITY"][pointer - 1]
-            ret_cur = float(price_cur - price_prev) / float(price_prev)
-            return ret_cur
+            return 0
         if trade_prev == 1:
             return 0
     if trade_cur == 1:
-        price_cur = data["EQUITY"][pointer]
-        price_prev = data["EQUITY"][pointer - 1]
-        ret_cur = float(price_cur - price_prev) / float(price_prev)
         if trade_prev == 0:
-            return ret_cur
+            return ret
         if trade_prev == 1:
-            return - ret_cur
+            return 0
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
@@ -263,11 +257,11 @@ def run():
             else:
                 losses += 1
             trade_periods.append(n_periods)
-            reward =  buildReward(n_periods, x, trade_prev, trade)
+            reward =  buildReward(n_periods, x, trade_prev, trade, ret)
             n_periods = 0
             returns.append(ret)
         if reward == 0:
-            reward = 0 if n_periods == 0 else buildReward(n_periods, x, trade_prev, trade)
+            reward = 0 if n_periods == 0 else buildReward(n_periods, x, trade_prev, trade, ret)
         trade_prev = trade
         # Slows down the script
         time.sleep(.05)
