@@ -244,6 +244,7 @@ def run():
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
         trade = choose_trade(x - 1, q_table, inPortfolio)
+        cur_state = select_state(x, inPortfolio)
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
@@ -263,16 +264,16 @@ def run():
         trade_prev = trade
         # Slows down the script
         time.sleep(.05)
-        q_predict = q_table.iloc[select_state(x), trade]
+        q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
-            q_target = ret + float(agent.gamma) * q_table.iloc[select_state(x), :
+            q_target = ret + float(agent.gamma) * q_table.iloc[cur_state, :
                     ].max()
         else:
-            q_target = ret + float(agent.gamma) * q_table.iloc[select_state(x), :
+            q_target = ret + float(agent.gamma) * q_table.iloc[cur_state, :
                     ].max()
         # Append to located cell in Q-Table || Tweak this
-        q_table.iloc[select_state(x), trade] += float(agent.alpha) * (q_target
+        q_table.iloc[cur_state, trade] += float(agent.alpha) * (q_target
                 - q_predict)
         print '\n'
     if inPortfolio:
