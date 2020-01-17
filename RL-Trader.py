@@ -243,8 +243,10 @@ def run():
     n_periods = 0
     for x in range(TOTAL_TRADES):
         # RL Agent chooses the trade
+        print "inPorfolio:", inPortfolio
         trade = choose_trade(x - 1, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
+        print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # Display to user
