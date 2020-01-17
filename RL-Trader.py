@@ -212,9 +212,11 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0, inPortfolio)
         if trade == 1:  # Sell the Equity
             inPortfolio = False  # Remove Equity from portfolio
+            ret = float(data['EQUITY'][pointer] - priceAtPurchase) / float(priceAtPurchase)
+            ret = stop_loss if ret < stop_loss else ret
             print '** Equity sold at $' + str(round(data['EQUITY'
                     ][pointer], 2))
-            return (float(data['EQUITY'][pointer] - priceAtPurchase) / float(priceAtPurchase), inPortfolio)
+            return (ret, inPortfolio)
     if inPortfolio == False:  # Equity is not owned
         if trade == 0:  # Buy the equity
             inPortfolio = True  # Add it to the portfolio
