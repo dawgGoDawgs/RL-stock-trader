@@ -232,6 +232,19 @@ def run():
         curRet = float(data['EQUITY'][x] - priceAtPurchase)
         # Display to user
         print 'Return from instance: ' + str(ret)
+        # Determine trade.
+        if trade == 0:
+            n_periods += 1
+        if trade_prev == 0 and trade == 1:
+            n_round_trips += 1
+            if ret >= 0:
+                wins += 1
+            else:
+                losses += 1
+            trade_periods.append(n_periods)
+            n_periods = 0
+            returns.append(ret)
+        trade_prev = trade
         # Slows down the script
         time.sleep(.05)
         q_predict = q_table.iloc[cur_state, trade]
@@ -247,19 +260,6 @@ def run():
         # Append to located cell in Q-Table || Tweak this
         q_table.iloc[cur_state, trade] += float(agent.alpha) * (q_target
                 - q_predict)
-        # Determine trade.
-        if trade == 0:
-            n_periods += 1
-        if trade_prev == 0 and trade == 1:
-            n_round_trips += 1
-            if ret >= 0:
-                wins += 1
-            else:
-                losses += 1
-            trade_periods.append(n_periods)
-            n_periods = 0
-            returns.append(ret)
-        trade_prev = trade
         print '\n'
     if inPortfolio:
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
