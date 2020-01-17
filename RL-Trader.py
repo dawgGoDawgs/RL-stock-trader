@@ -144,10 +144,10 @@ def choose_trade(pointer, q_table, inPortfolio):
         return analytic_decision
     # Otherwise, return what has been working
     else:
-        probs = state_actions / sum(state_actions)
-        if np.random.uniform() < probs[0]:
-            return 0 # buy
-        else:
+        maximum = state_actions.idxmax()
+        if str(maximum) == 'buy':
+            return 0
+        if str(maximum) == 'sell':
             return 1
 
 # Selects the state on the Q-Table
