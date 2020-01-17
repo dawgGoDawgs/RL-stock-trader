@@ -150,7 +150,7 @@ def choose_trade(pointer, q_table, inPortfolio):
         # check stop_loss
         trigger_stop = False
         if inPortfolio:
-            price_cur = data["EQUITY"][pointer]
+            price_cur = data["EQUITY"][pointer  + 1]
             ret = (price_cur - priceAtPurchase) / priceAtPurchase
             trigger_stop = ret <= stop_loss
             print "stop ret:", ret
