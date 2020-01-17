@@ -273,7 +273,7 @@ def run():
         if trade_prev == 0 and trade == 1:
             # return of option.
             print "orig ret:", ret
-                actual_ret = (1 - option_price_pct) * (1 + ret) - 1
+            actual_ret = (1 - option_price_pct) * (1 + ret) - 1
             if -option_price_pct > actual_ret:
                 ret =  -option_price_pct
                 print "Does not exercise call option."
