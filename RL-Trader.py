@@ -146,10 +146,11 @@ def choose_trade(pointer, q_table, inPortfolio):
     else:
         print state_actions
         maximum = state_actions.idxmax()
-        if str(maximum) == 'sell':
-            return 1
+        print maximum
         if str(maximum) == 'buy':
             return 0
+        if str(maximum) == 'sell':
+            return 1
 
 # Selects the state on the Q-Table
 def select_state(pointer):
