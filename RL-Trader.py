@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# coding=utf-8
+
 # Reinforcement Learning Equity Trader
 
 # Edit these values to change how the RL brain learns
@@ -235,8 +238,8 @@ def run():
         # Determine trade.
         if trade == 0:
             n_periods += 1
-        reward = 0
         
+        reward = 0
         if trade_prev == 0 and trade == 1:
             n_round_trips += 1
             if ret >= 0:
