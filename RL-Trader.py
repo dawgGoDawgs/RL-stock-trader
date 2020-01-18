@@ -234,7 +234,7 @@ def determine_payoff(pointer, trade, inPortfolio):
  
 # aim for profit and stability.
 def buildReward(n_periods, trade_prev, trade_cur, ret):
-    return ret / n_periods
+    return ret
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
