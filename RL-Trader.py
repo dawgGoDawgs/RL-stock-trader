@@ -147,9 +147,9 @@ def choose_trade(pointer, q_table, inPortfolio):
     else:
         maximum = state_actions.idxmax()
         # set stop loss
-        price_next = data["EQUITY"][pointer + 1]
-        ret_next = (price_next - priceAtPurchase) / priceAtPurchase
-        trigger_stop = ret_next < stop_loss and inPortfolio
+        price_cur = data["EQUITY"][pointer]
+        ret_cur = (price_cur - priceAtPurchase) / priceAtPurchase
+        trigger_stop = ret_cur < stop_loss and inPortfolio
         if str(maximum) == 'sell' or trigger_stop:
             if trigger_stop:
                 print "trigger stop"
@@ -169,6 +169,8 @@ def select_state(pointer):
     previous_rf = data["RF"][pointer - 1]
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
+    # Get return
+    ret = (current_price - priceAtPurchase) / priceAtPurchase
 
     if current_rf > previous_rf:
         if current_price > previous_price:
@@ -221,8 +223,8 @@ def determine_payoff(pointer, trade, inPortfolio):
         if trade == 0:  # Buy the equity
             inPortfolio = True  # Add it to the portfolio
             print '** Equity bought at $' + str(round(data['EQUITY'
-                    ][pointer - 1], 2))  # Display Price Equity was purchased at
-            priceAtPurchase = data['EQUITY'][pointer - 1]  # Record the price at which the Equity was purchased
+                    ][pointer], 2))  # Display Price Equity was purchased at
+            priceAtPurchase = data['EQUITY'][pointer]  # Record the price at which the Equity was purchased
             return (0.0, inPortfolio)
         if trade == 1:  # Sell
             inPortfolio = False
@@ -258,7 +260,7 @@ def run():
         next_state = select_state(x)
         print "cur state:", cur_state
         # Find the payoff from the trade
-        ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
+        ret, inPortfolio = determine_payoff(x-1, trade, inPortfolio)
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
