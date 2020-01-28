@@ -8,6 +8,7 @@ EPSILON = .9
 ALPHA = .1
 GAMMA = .9
 stop_loss = -0.01
+slippage = -0.001
 
 # Create agent class
 class Agent:
@@ -202,7 +203,7 @@ def determine_payoff(pointer, trade, inPortfolio):
             return (0, inPortfolio)
         if trade == 1:  # Sell the Equity
             inPortfolio = False  # Remove Equity from portfolio
-            ret = float(data['EQUITY'][pointer] - priceAtPurchase) / float(priceAtPurchase)
+            ret = float(data['EQUITY'][pointer] - priceAtPurchase) / float(priceAtPurchase) + slippage
             print '** Equity sold at $' + str(round(data['EQUITY'
                     ][pointer], 2))
             return (ret, inPortfolio)
