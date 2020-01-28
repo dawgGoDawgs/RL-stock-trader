@@ -152,7 +152,7 @@ def choose_trade(pointer, q_table, inPortfolio):
         price_cur = data["EQUITY"][pointer]
         ret_cur = (price_cur - priceAtPurchase) / priceAtPurchase
         trigger_stop = ret_cur < stop_loss and inPortfolio
-        if str(maximum) == 'sell': or trigger_stop:
+        if str(maximum) == 'sell' or trigger_stop:
             if trigger_stop:
                 print "trigger stop"
             return 1
