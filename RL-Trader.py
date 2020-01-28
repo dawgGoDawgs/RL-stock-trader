@@ -48,7 +48,7 @@ if len(sys.argv) != 5:
 # Todo: create datetime function for user inputs on end dates
 data_df = pd.read_csv("./data/minute/SPY.txt", sep='\s+')
 EQUITY_TRAIN = data_df.iloc[:1000]
-EQUITY = data_df.iloc[1000:]
+EQUITY = data_df.iloc[1000:10000]
 
 ## Calculate HMM States
 open_v = EQUITY_TRAIN["open"].values.astype(float)
