@@ -304,5 +304,5 @@ Q-table:
     print "total round trip:", n_round_trips
     print "average trade periods:", average_periods
     print "win rate:", win_rate
-    plt.plot(cum_returns)
-    plt.plot(cum_hold_returns)
+    print(cum_returns)
+    print(cum_hold_returns)
