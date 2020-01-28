@@ -275,7 +275,7 @@ def run():
     cum_returns = np.cumprod(np.array(returns) + 1)
     cum_hold_returns = np.cumprod(np.array(hold_returns) + 1)
     win_rate = float(wins) / float(wins + losses)
-    hold_only_win_rate = sum(hold_returns >= 0) / len(hold_returns)
+    hold_only_win_rate = sum(np.array(hold_returns) >= 0) / len(hold_returns)
     average_periods = np.mean(trade_periods)
     return (q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate, hold_only_win_rate)
 
