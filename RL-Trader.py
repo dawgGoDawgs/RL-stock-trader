@@ -225,7 +225,7 @@ def run():
     wins = 0
     losses = 0
     n_periods = 0
-    for x in range(0, TOTAL_TRADES):
+    for x in range(0, TOTAL_TRADES - 1):
         # RL Agent chooses the trade
         trade = choose_trade(x, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
