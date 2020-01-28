@@ -74,10 +74,10 @@ X_train[inds] = np.take(col_mean, inds[1])
 
 ## Calculate HMM States
 open_v = EQUITY["Open"].values
-close_v = EQUITY["Close"].values
-high_v = EQUITY["High"].values
-low_v = EQUITY["Low"].values
-volume = EQUITY["Volume"].values.astype(float)
+close_v = EQUITY["close"].values
+high_v = EQUITY["high"].values
+low_v = EQUITY["low"].values
+volume = EQUITY["volume"].values.astype(float)
 pct = pd.Series(close_v).pct_change().values
 pct_volume = pd.Series(volume).pct_change().values
 time_seconds = (EQUITY["time"].apply(lambda s: s[:8])
