@@ -246,18 +246,19 @@ def run():
     losses = 0
     n_periods = 0
     for x in range(1, TOTAL_TRADES - 1):
-        # track signle interval position ret
-        if inPortfolio:
-            position_ret_one_interval = (data['EQUITY'][x] - data['EQUITY'][x - 1]) / float(data['EQUITY'][x - 1])
-            position_ret_curve.append(position_ret_one_interval)
-        else:
-            position_ret_curve = [] # begin tracking return curve
         # RL Agent chooses the trade
         trade = choose_trade(x, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
+        # track signle interval position ret at next
+        if inPortfolio:
+            position_ret_one_interval = (data['EQUITY'][x + 1] - data['EQUITY'][x]) / float(data['EQUITY'][x])
+            position_ret_curve.append(position_ret_one_interval)
+        else:
+            position_ret_curve = [] # end tracking return curve
+        # construct next state
         next_state = select_state(x + 1, inPortfolio)
         # Display to user
         print 'Return from instance: ' + str(ret)
