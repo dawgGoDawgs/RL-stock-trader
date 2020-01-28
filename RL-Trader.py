@@ -45,8 +45,6 @@ if len(sys.argv) != 5:
     print "To run: RL-Trader.py [EQUITY] [START DATE - DAY/MONTH/YEAR] [STARTING PORTFOLIO VALUE] [HOW MANY TRADES TO RUN BEFORE REINFORCEMENT LEARNING BEGINS]\nEx. RL-Trader.py F 1/1/2000 1000 200"
     exit()
 
-# Get Equity Data
-CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
 data_df = pd.read_csv("./data/minute/SPY.txt", sep='\s+')
 EQUITY_TRAIN = data_df.iloc[:1000]
