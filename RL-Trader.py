@@ -47,7 +47,7 @@ if len(sys.argv) != 5:
 # Get Equity Data
 CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
-data_df = pd.read_csv("data/minute/SPY.txt", sep='\s+')
+data_df = pd.read_csv("./data/minute/SPY.txt", sep='\s+')
 EQUITY_TRAIN = data_df.iloc[:1000]
 EQUITY = data_df.iloc[1000:]
 
