@@ -29,6 +29,7 @@ import sys, time, datetime
 from Logic.logic import calculate_BSM, state_logic
 from talib import ADX, HT_DCPERIOD, RSI, BETA, CORREL, MFI
 from hmmlearn.hmm import GaussianHMM
+import matplotlib.pyplot as plt
 
 # Welcome message
 print "\nThanks for using the Reinforcement Learning Stock Trader by Matija Krolo. If you experience an error, it is most likely because the Equity/Stock you chose to analyize does not have available data before the date you entered. If you encounter an error, please check Yahoo.com/finance to ensure it is not the case. \n"
@@ -225,7 +226,7 @@ def run():
     wins = 0
     losses = 0
     n_periods = 0
-    for x in range(0, TOTAL_TRADES - 1):
+    for x in range(1, TOTAL_TRADES - 1):
         # RL Agent chooses the trade
         trade = choose_trade(x, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
@@ -249,9 +250,12 @@ def run():
             trade_periods.append(n_periods)
             reward = buildReward(n_periods, trade_prev, trade, ret)
             n_periods = 0
-            returns.append(ret)
+        # build return arrays
+        returns.append(ret)
+        hold_ret = (data['EQUITY'][x] - data['EQUITY'][x - 1]) / data['EQUITY'][x - 1]
+        hold_returns.append(hold_ret)
+
         trade_prev = trade
-        # Slows down the script
         q_predict = q_table.iloc[cur_state, trade]
         # If statement for last trade, tweak this
         if x == TOTAL_TRADES-1:
@@ -267,15 +271,15 @@ def run():
     if inPortfolio:
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
-    print(returns)
     cum_returns = np.cumprod(np.array(returns) + 1)
+    cum_hold_returns = np.cumprod(np.array(hold_returns) + 1)
     win_rate = float(wins) / float(wins + losses)
     average_periods = np.mean(trade_periods)
-    return (q_table, cum_returns[-1], n_round_trips, average_periods, win_rate)
+    return (q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate)
 
 # Ensures everything is loaded
 if __name__ == '__main__':
-    q_table, cum_return, n_round_trips, average_periods, win_rate = run()
+    q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate = run()
     print '''\r
 Q-table:
 '''
@@ -292,8 +296,12 @@ Q-table:
         ]
     print q_table
     # Show profits
-    END_PORTFOLIO_VALUE = cum_return * float(STARTING_PORTFOLIO_VALUE)
+    END_PORTFOLIO_VALUE = cum_returns[-1] * float(STARTING_PORTFOLIO_VALUE)
+    END_HOLD_ONLY_VALUE = cum_hold_returns[-1] * float(STARTING_PORTFOLIO_VALUE)
     print '\nFinal portfolio value from trading ' + str(GIVEN_EQUITY) + ' with starting portfolio of $' + str(STARTING_PORTFOLIO_VALUE) + ': $' + str(END_PORTFOLIO_VALUE)
+    print '\nFinal hold only value from trading ' + str(GIVEN_EQUITY) + ' with starting portfolio of $' + str(STARTING_PORTFOLIO_VALUE) + ': $' + str(END_HOLD_ONLY_VALUE)
     print "total round trip:", n_round_trips
     print "average trade periods:", average_periods
     print "win rate:", win_rate
+    plt.plot(cum_returns)
+    plt.plot(cum_hold_returns)
