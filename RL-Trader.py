@@ -173,6 +173,7 @@ def select_state(pointer, current_in_portfolio):
         state = 3 # Equity Appreciated and Hidden is 3
     if not current_in_portfolio:
         state += 4
+    return state
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
