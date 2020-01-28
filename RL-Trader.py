@@ -6,7 +6,7 @@
 # Edit these values to change how the RL brain learns
 EPSILON = .9
 ALPHA = .1
-GAMMA = .9
+GAMMA = .1
 stop_loss = -0.01
 slippage = -0.001
 
