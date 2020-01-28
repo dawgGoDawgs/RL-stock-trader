@@ -104,7 +104,7 @@ STATES = 12
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
-TOTAL_TRADES = len(EQUITY['Close']) 
+TOTAL_TRADES = len(EQUITY['close']) 
 
 # Error Check
 if int(TRADES_TO_RUN) > TOTAL_TRADES:
@@ -119,7 +119,7 @@ def build_q_table(n_states, actions):
 
 # Create dictionary
 compile_data = {
-    'EQUITY': EQUITY['Adj Close'],
+    'EQUITY': EQUITY['close'],
     'HIDDEN': hidden_states
     }
 
