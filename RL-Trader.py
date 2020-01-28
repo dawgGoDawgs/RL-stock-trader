@@ -95,12 +95,12 @@ col_mean = np.nanmean(X, axis=0)
 inds = np.where(np.isnan(X))
 X[inds] = np.take(col_mean, inds[1])
 # Make an HMM instance and execute fit
-num_components = 3
+num_components = 4
 model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=1000).fit(X_train)
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 12
+STATES = 8
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -158,50 +158,21 @@ def choose_trade(pointer, q_table, inPortfolio):
             return 0
 
 # Selects the state on the Q-Table
-def select_state(pointer):
-    # Find the current price of the equity
-    current_price = data['EQUITY'][pointer]
-    # Find the previous price of the equity
-    previous_price = data['EQUITY'][pointer - 1]
-    # Find the current risk free rate
-    current_rf = data["RF"][pointer]
-    # Find the previous risk free rate
-    previous_rf = data["RF"][pointer - 1]
+def select_state(pointer, current_in_portfolio):
     # Get the current hidden state
     current_hidden = data["HIDDEN"][pointer]
-    # Get return
-    ret = (current_price - priceAtPurchase) / priceAtPurchase
 
-    if current_rf > previous_rf:
-        if current_price > previous_price:
-            if current_hidden == 0:
-                return 0 # Equity Appreciated and Hidden is 0
-            if current_hidden == 1:
-                return 1 # Equity Appreciated and Hidden is 1
-            if current_hidden == 2:
-                return 2 # Equity Appreciated and Hidden is 2
-        if current_price <= previous_price:
-            if current_hidden == 0:
-                return 3 # Equity Deppreciated and Hidden is 0
-            if current_hidden == 1:
-                return 4 # Equity Deppreciated and Hidden is 1
-            if current_hidden == 2:
-                return 5 # Equity Deppreciated and Hidden is 2
-    else:
-        if current_price > previous_price:
-            if current_hidden == 0:
-                return 6 # Equity Appreciated and Hidden is 0
-            if current_hidden == 1:
-                return 7 # Equity Appreciated and Hidden is 1
-            if current_hidden == 2:
-                return 8 # Equity Appreciated and Hidden is 2
-        if current_price <= previous_price:
-            if current_hidden == 0:
-                return 9 # Equity Deppreciated and Hidden is 0
-            if current_hidden == 1:
-                return 10 # Equity Deppreciated and Hidden is 1
-            if current_hidden == 2:
-                return 11 # Equity Deppreciated and Hidden is 2
+    state = 0
+    if current_hidden == 0:
+        state = 0 # Equity Appreciated and Hidden is 0
+    if current_hidden == 1:
+        state = 1 # Equity Appreciated and Hidden is 1
+    if current_hidden == 2:
+        state = 2 # Equity Appreciated and Hidden is 2
+    if current_hidden == 3:
+        state = 3 # Equity Appreciated and Hidden is 3
+    if not current_in_portfolio:
+        state += 4
 # Function to find the profit from trades
 def determine_payoff(pointer, trade, inPortfolio):
     # Hold the value that the equity was purchased at
@@ -253,14 +224,14 @@ def run():
     wins = 0
     losses = 0
     n_periods = 0
-    for x in range(1, TOTAL_TRADES):
+    for x in range(0, TOTAL_TRADES):
         # RL Agent chooses the trade
-        trade = choose_trade(x - 1, q_table, inPortfolio)
-        cur_state = select_state(x-1)
-        next_state = select_state(x)
+        trade = choose_trade(x, q_table, inPortfolio)
+        cur_state = select_state(x, inPortfolio)
         print "cur state:", cur_state
         # Find the payoff from the trade
-        ret, inPortfolio = determine_payoff(x-1, trade, inPortfolio)
+        ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
+        next_state = select_state(x + 1, inPortfolio)
         # Display to user
         print 'Return from instance: ' + str(ret)
         # Determine trade.
@@ -296,10 +267,10 @@ def run():
         print "**** Please note that Equity is still held and may be traded later, this may affect profits ****"
     # Return the Q-Table and profit as a tuple
     print(returns)
-    cum_return = np.cumprod(np.array(returns) + 1)[-1]
+    cum_returns = np.cumprod(np.array(returns) + 1)
     win_rate = float(wins) / float(wins + losses)
     average_periods = np.mean(trade_periods)
-    return (q_table, cum_return, n_round_trips, average_periods, win_rate)
+    return (q_table, cum_returns[-1], n_round_trips, average_periods, win_rate)
 
 # Ensures everything is loaded
 if __name__ == '__main__':
@@ -309,18 +280,14 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Equity Appreciated and Hidden is 0 and rf increasing',
-        "Equity Appreciated and Hidden is 1 and rf increasing",
-        "Equity Appreciated and Hidden is 2 and rf increasing",
-        'Equity Deppreciated and Hidden is 0 and rf increasing',
-        "Equity Deppreciated and Hidden is 1 and rf increasing",
-        "Equity Deppreciated and Hidden is 2 and rf increasing",
-        'Equity Appreciated and Hidden is 0 and rf decreasing',
-        "Equity Appreciated and Hidden is 1 and rf decreasing",
-        "Equity Appreciated and Hidden is 2 and rf decreasing",
-        'Equity Deppreciated and Hidden is 0 and rf decreasing',
-        "Equity Deppreciated and Hidden is 1 and rf decreasing",
-        "Equity Deppreciated and Hidden is 2 and rf decreasing",
+        'Hidden is 0 and in portfolio',
+        "Hidden is 1 and in portfolio",
+        "Hidden is 2 and in portfolio",
+        "Hidden is 3 and in portfolio",
+        'Hidden is 0 and not in portfolio',
+        "Hidden is 1 and not in portfolio",
+        "Hidden is 2 and not in portfolio",
+        "Hidden is 3 and not in portfolio",
         ]
     print q_table
     # Show profits
