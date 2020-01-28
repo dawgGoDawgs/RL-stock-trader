@@ -193,7 +193,8 @@ def select_state(pointer, current_in_portfolio):
         # check position ret
         if position_ret >= 0:
             "positive return on position"
-        else state += 12
+        else:
+            state += 12
 
     else:
         if current_hidden == 0:
