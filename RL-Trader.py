@@ -136,7 +136,7 @@ def choose_trade(pointer, q_table, inPortfolio):
     # Find the trade decision from our trade logic
     analytic_decision = state_logic(pointer, data)
     # Select state from Q-Table
-    state_actions = q_table.iloc[select_state(pointer), :]
+    state_actions = q_table.iloc[select_state(pointer, inPortfolio), :]
     # If the greedy factor is less than a randomly distributed number, if there are no values
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
