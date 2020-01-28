@@ -67,7 +67,7 @@ beta = BETA(high_v, low_v, timeperiod=30)
 correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
 # Pack diff and volume for training.
-X_train = np.column_stack([pct, adx, rsi, beta, correl, mfi, time_seconds])
+X_train = np.column_stack([pct, adx, rsi, beta, correl, mfi])
 col_mean = np.nanmean(X_train, axis=0)
 inds = np.where(np.isnan(X_train))
 X_train[inds] = np.take(col_mean, inds[1])
@@ -90,21 +90,21 @@ correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
 
 # Pack diff and volume for training.
-X = np.column_stack([pct, adx, rsi, beta, correl, mfi, time_seconds])
+X = np.column_stack([pct, adx, rsi, beta, correl, mfi])
 col_mean = np.nanmean(X, axis=0)
 inds = np.where(np.isnan(X))
 X[inds] = np.take(col_mean, inds[1])
 # Make an HMM instance and execute fit
-num_components = 8
+num_components = 
 model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=1000).fit(X_train)
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 24
+STATES = 12
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
-TOTAL_TRADES = len(EQUITY['close'])
+TOTAL_TRADES = len(EQUITY['close']) 
 
 # Error Check
 if int(TRADES_TO_RUN) > TOTAL_TRADES:
@@ -180,37 +180,21 @@ def select_state(pointer, current_in_portfolio):
             state = 2 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
             state = 3 # Equity Appreciated and Hidden is 3
-        if current_hidden == 4:
-            state = 4 # Equity Appreciated and Hidden is 4
-        if current_hidden == 5:
-            state = 5 # Equity Appreciated and Hidden is 5
-        if current_hidden == 6:
-            state = 6 # Equity Appreciated and Hidden is 6
-        if current_hidden == 7:
-            state = 7 # Equity Appreciated and Hidden is 7
         # check position ret
         if position_ret >= 0:
             "positive return on position"
         else:
-            state += 8
+            state += 4
 
     else:
         if current_hidden == 0:
-            state = 16 # Equity Appreciated and Hidden is 0
+            state = 8 # Equity Appreciated and Hidden is 0
         if current_hidden == 1:
-            state = 17 # Equity Appreciated and Hidden is 1
+            state = 9 # Equity Appreciated and Hidden is 1
         if current_hidden == 2:
-            state = 18 # Equity Appreciated and Hidden is 2
+            state = 10 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
-            state = 19 # Equity Appreciated and Hidden is 3
-        if current_hidden == 4:
-            state = 20 # Equity Appreciated and Hidden is 4
-        if current_hidden == 5:
-            state = 21 # Equity Appreciated and Hidden is 5
-        if current_hidden == 6:
-            state = 22 # Equity Appreciated and Hidden is 6
-        if current_hidden == 7:
-            state = 23 # Equity Appreciated and Hidden is 7
+            state = 11 # Equity Appreciated and Hidden is 3
 
     return state
 # Function to find the profit from trades
@@ -338,26 +322,14 @@ Q-table:
         "Hidden is 1 and in portfolio and positive ret",
         "Hidden is 2 and in portfolio and positive ret",
         "Hidden is 3 and in portfolio and positive ret",
-        'Hidden is 4 and in portfolio and positive ret',
-        "Hidden is 5 and in portfolio and positive ret",
-        "Hidden is 6 and in portfolio and positive ret",
-        "Hidden is 7 and in portfolio and positive ret",
         'Hidden is 0 and in portfolio and negative ret',
         "Hidden is 1 and in portfolio and negative ret",
         "Hidden is 2 and in portfolio and negative ret",
         "Hidden is 3 and in portfolio and negative ret",
-        'Hidden is 4 and in portfolio and negative ret',
-        "Hidden is 5 and in portfolio and negative ret",
-        "Hidden is 6 and in portfolio and negative ret",
-        "Hidden is 7 and in portfolio and negative ret",
         'Hidden is 0 and not in portfolio',
         "Hidden is 1 and not in portfolio",
         "Hidden is 2 and not in portfolio",
         "Hidden is 3 and not in portfolio",
-        'Hidden is 4 and not in portfolio',
-        "Hidden is 5 and not in portfolio",
-        "Hidden is 6 and not in portfolio",
-        "Hidden is 7 and not in portfolio",
         ]
     print q_table
     # Show profits
