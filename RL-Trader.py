@@ -47,23 +47,20 @@ if len(sys.argv) != 5:
 # Get Equity Data
 CURRENT_MONTH = datetime.datetime
 # Todo: create datetime function for user inputs on end dates
-EQUITY_TRAIN = web.get_data_yahoo(GIVEN_EQUITY, end=START_DATE, start="1/1/2000",
-                            interval='d')
-EQUITY = web.get_data_yahoo(GIVEN_EQUITY, end='1/1/2020', start=START_DATE,
-                            interval='d')
-MKT_VOLATIILTY = web.get_data_yahoo('^VIX', end='1/1/2020',
-                                    start=START_DATE, interval='d')
-RF_Rate = web.get_data_yahoo('^TNX', end='1/1/2020', start=START_DATE,
-                             interval='d')
+data_df = pd.read_csv("data/minute/SPY.txt", sep='\s+')
+EQUITY_TRAIN = data_df.iloc[:1000]
+EQUITY = data_df.iloc[1000:]
 
 ## Calculate HMM States
-open_v = EQUITY_TRAIN["Open"].values
-close_v = EQUITY_TRAIN["Close"].values
-high_v = EQUITY_TRAIN["High"].values
-low_v = EQUITY_TRAIN["Low"].values
-volume = EQUITY_TRAIN["Volume"].values.astype(float)
+open_v = EQUITY_TRAIN["open"].values.astype(float)
+close_v = EQUITY_TRAIN["close"].values.astype(float)
+high_v = EQUITY_TRAIN["high"].values.astype(float)
+low_v = EQUITY_TRAIN["low"].values.astype(float)
+volume = EQUITY_TRAIN["volume"].values.astype(float)
 pct = pd.Series(close_v).pct_change().values
 pct_volume = pd.Series(volume).pct_change().values
+time_seconds = (EQUITY_TRAIN["time"].apply(lambda s: s[:8])
+    .apply(lambda s: datetime.strptime(s,'%H:%M:%S')).apply(lambda pt: pt.minute + pt.hour*60))
 # feature engineering
 adx = ADX(high_v, low_v, close_v, timeperiod=14)
 rsi = RSI(close_v, timeperiod=14)
@@ -71,7 +68,7 @@ beta = BETA(high_v, low_v, timeperiod=30)
 correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
 # Pack diff and volume for training.
-X_train = np.column_stack([pct, adx, rsi, beta, correl, mfi])
+X_train = np.column_stack([pct, adx, rsi, beta, correl, mfi, time_seconds])
 col_mean = np.nanmean(X_train, axis=0)
 inds = np.where(np.isnan(X_train))
 X_train[inds] = np.take(col_mean, inds[1])
@@ -84,6 +81,8 @@ low_v = EQUITY["Low"].values
 volume = EQUITY["Volume"].values.astype(float)
 pct = pd.Series(close_v).pct_change().values
 pct_volume = pd.Series(volume).pct_change().values
+time_seconds = (EQUITY["time"].apply(lambda s: s[:8])
+    .apply(lambda s: datetime.strptime(s,'%H:%M:%S')).apply(lambda pt: pt.minute + pt.hour*60))
 # feature engineering
 adx = ADX(high_v, low_v, close_v, timeperiod=14)
 rsi = RSI(close_v, timeperiod=14)
@@ -92,7 +91,7 @@ correl = CORREL(high_v, low_v, timeperiod=30)
 mfi = MFI(high_v, low_v, close_v, volume, timeperiod=14)
 
 # Pack diff and volume for training.
-X = np.column_stack([pct, adx, rsi, beta, correl, mfi])
+X = np.column_stack([pct, adx, rsi, beta, correl, mfi, time_seconds])
 col_mean = np.nanmean(X, axis=0)
 inds = np.where(np.isnan(X))
 X[inds] = np.take(col_mean, inds[1])
@@ -122,8 +121,6 @@ def build_q_table(n_states, actions):
 # Create dictionary
 compile_data = {
     'EQUITY': EQUITY['Adj Close'],
-    'RF': RF_Rate['Adj Close'],
-    'SIGMA': MKT_VOLATIILTY['Adj Close'],
     'HIDDEN': hidden_states
     }
 
