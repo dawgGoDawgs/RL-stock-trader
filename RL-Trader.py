@@ -4,7 +4,7 @@
 # Reinforcement Learning Equity Trader
 
 # Edit these values to change how the RL brain learns
-EPSILON = .8
+EPSILON = .9
 ALPHA = .1
 GAMMA = .9
 stop_loss = -0.01
@@ -275,12 +275,13 @@ def run():
     cum_returns = np.cumprod(np.array(returns) + 1)
     cum_hold_returns = np.cumprod(np.array(hold_returns) + 1)
     win_rate = float(wins) / float(wins + losses)
+    hold_only_win_rate = sum(hold_returns >= 0) / len(hold_returns)
     average_periods = np.mean(trade_periods)
-    return (q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate)
+    return (q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate, hold_only_win_rate)
 
 # Ensures everything is loaded
 if __name__ == '__main__':
-    q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate = run()
+    q_table, cum_returns, cum_hold_returns, n_round_trips, average_periods, win_rate, hold_only_win_rate = run()
     print '''\r
 Q-table:
 '''
@@ -304,5 +305,6 @@ Q-table:
     print "total round trip:", n_round_trips
     print "average trade periods:", average_periods
     print "win rate:", win_rate
+    print "hold only win rate", hold_only_win_rate
     print(cum_returns)
     print(cum_hold_returns)
