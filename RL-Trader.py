@@ -100,13 +100,11 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 23
+STATES = 24
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
 TOTAL_TRADES = len(EQUITY['close'])
-print(EQUITY.head())
-print(EQUITY.tail())
 
 # Error Check
 if int(TRADES_TO_RUN) > TOTAL_TRADES:
@@ -273,7 +271,6 @@ def run():
         # RL Agent chooses the trade
         trade = choose_trade(x, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
-        print x
         print "cur state:", cur_state
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
