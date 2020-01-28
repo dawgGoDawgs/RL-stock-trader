@@ -122,10 +122,11 @@ compile_data = {
     'EQUITY': EQUITY['close'],
     'HIDDEN': hidden_states
     }
-print(compile_data.head())
 
 # Compile dataframe from dictionary
 data = pd.DataFrame(compile_data)
+print(data.head())
+print(data.shape)
 
 # Agent brain for RL
 def choose_trade(pointer, q_table, inPortfolio):
