@@ -253,6 +253,7 @@ def run():
         # Find the payoff from the trade
         ret, inPortfolio = determine_payoff(x, trade, inPortfolio)
         # track signle interval position ret at next
+        print(inPortfolio)
         if inPortfolio:
             position_ret_one_interval = (data['EQUITY'][x + 1] - data['EQUITY'][x]) / float(data['EQUITY'][x])
             position_ret_curve.append(position_ret_one_interval)
