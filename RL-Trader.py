@@ -122,6 +122,7 @@ compile_data = {
     'EQUITY': EQUITY['close'],
     'HIDDEN': hidden_states
     }
+print(compile_data.head())
 
 # Compile dataframe from dictionary
 data = pd.DataFrame(compile_data)
