@@ -104,7 +104,9 @@ STATES = 23
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
-TOTAL_TRADES = len(EQUITY['close']) 
+TOTAL_TRADES = len(EQUITY['close'])
+print(EQUITY.head())
+print(EQUITY.tail())
 
 # Error Check
 if int(TRADES_TO_RUN) > TOTAL_TRADES:
