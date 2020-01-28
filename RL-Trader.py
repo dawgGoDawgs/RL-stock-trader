@@ -73,7 +73,7 @@ inds = np.where(np.isnan(X_train))
 X_train[inds] = np.take(col_mean, inds[1])
 
 ## Calculate HMM States
-open_v = EQUITY["Open"].values
+open_v = EQUITY["open"].values
 close_v = EQUITY["close"].values
 high_v = EQUITY["high"].values
 low_v = EQUITY["low"].values
