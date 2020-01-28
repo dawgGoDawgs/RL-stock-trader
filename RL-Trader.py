@@ -102,7 +102,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 16
+STATES = 28
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -183,21 +183,27 @@ def select_state(pointer, current_in_portfolio):
             state = 2 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
             state = 3 # Equity Appreciated and Hidden is 3
+        # check local sharpe ratio
         if local_sharpe == None:
             "no sharpe ratio"
         elif local_sharpe >= 1:
             state += 4
         else:
             state += 8
+        # check position ret
+        if position_ret >= 0:
+            "positive return on position"
+        else state += 12
+
     else:
         if current_hidden == 0:
-            state = 12 # Equity Appreciated and Hidden is 0
+            state = 24 # Equity Appreciated and Hidden is 0
         if current_hidden == 1:
-            state = 13 # Equity Appreciated and Hidden is 1
+            state = 25 # Equity Appreciated and Hidden is 1
         if current_hidden == 2:
-            state = 14 # Equity Appreciated and Hidden is 2
+            state = 26 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
-            state = 15 # Equity Appreciated and Hidden is 3
+            state = 27 # Equity Appreciated and Hidden is 3
 
     return state
 # Function to find the profit from trades
@@ -321,18 +327,30 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Hidden is 0 and in portfolio and no local sharpe',
-        "Hidden is 1 and in portfolio and no local sharpe",
-        "Hidden is 2 and in portfolio and no local sharpe",
-        "Hidden is 3 and in portfolio and no local sharpe",
-        'Hidden is 0 and in portfolio and local sharpe >= 1',
-        "Hidden is 1 and in portfolio and local sharpe >= 1",
-        "Hidden is 2 and in portfolio and local sharpe >= 1",
-        "Hidden is 3 and in portfolio and local sharpe >= 1",
-        'Hidden is 0 and in portfolio and local sharpe < 1',
-        "Hidden is 1 and in portfolio and local sharpe < 1",
-        "Hidden is 2 and in portfolio and local sharpe < 1",
-        "Hidden is 3 and in portfolio and local sharpe < 1",
+        'Hidden is 0 and in portfolio and no local sharpe and position ret',
+        "Hidden is 1 and in portfolio and no local sharpe and position ret",
+        "Hidden is 2 and in portfolio and no local sharpe and position ret",
+        "Hidden is 3 and in portfolio and no local sharpe and position ret",
+        'Hidden is 0 and in portfolio and local sharpe >= 1 and position ret',
+        "Hidden is 1 and in portfolio and local sharpe >= 1 and position ret",
+        "Hidden is 2 and in portfolio and local sharpe >= 1 and position ret",
+        "Hidden is 3 and in portfolio and local sharpe >= 1 and position ret",
+        'Hidden is 0 and in portfolio and local sharpe < 1 and position ret',
+        "Hidden is 1 and in portfolio and local sharpe < 1 and position ret",
+        "Hidden is 2 and in portfolio and local sharpe < 1 and position ret",
+        "Hidden is 3 and in portfolio and local sharpe < 1 and position ret",
+        'Hidden is 0 and in portfolio and no local sharpe and negative ret',
+        "Hidden is 1 and in portfolio and no local sharpe and negative ret",
+        "Hidden is 2 and in portfolio and no local sharpe and negative ret",
+        "Hidden is 3 and in portfolio and no local sharpe and negative ret",
+        'Hidden is 0 and in portfolio and local sharpe >= 1 and negative ret',
+        "Hidden is 1 and in portfolio and local sharpe >= 1 and negative ret",
+        "Hidden is 2 and in portfolio and local sharpe >= 1 and negative ret",
+        "Hidden is 3 and in portfolio and local sharpe >= 1 and negative ret",
+        'Hidden is 0 and in portfolio and local sharpe < 1 and negative ret',
+        "Hidden is 1 and in portfolio and local sharpe < 1 and negative ret",
+        "Hidden is 2 and in portfolio and local sharpe < 1 and negative ret",
+        "Hidden is 3 and in portfolio and local sharpe < 1 and negative ret",
         'Hidden is 0 and not in portfolio',
         "Hidden is 1 and not in portfolio",
         "Hidden is 2 and not in portfolio",
