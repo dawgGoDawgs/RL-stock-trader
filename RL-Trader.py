@@ -169,6 +169,7 @@ def select_state(pointer, current_in_portfolio):
     if current_in_portfolio:
 
         position_ret = (current_price - priceAtPurchase) / float(priceAtPurchase)
+        print(position_ret_curve)
         local_win_rate = sum(np.array(position_ret_curve) > 0) / float(len(position_ret_curve))
 
         if current_hidden == 0:
