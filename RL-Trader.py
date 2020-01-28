@@ -169,6 +169,8 @@ def select_state(pointer, current_in_portfolio):
     if current_in_portfolio:
 
         position_ret = (current_price - priceAtPurchase) / float(priceAtPurchase)
+        local_win_rate = sum(np.array(position_ret_curve) > 0) / float(len(position_ret_curve))
+
         if current_hidden == 0:
             state = 0 # Equity Appreciated and Hidden is 0
         if current_hidden == 1:
@@ -177,7 +179,7 @@ def select_state(pointer, current_in_portfolio):
             state = 2 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
             state = 3 # Equity Appreciated and Hidden is 3
-        if position_ret >= 0:
+        if local_win_rate >= 0.5:
             state += 4
     else:
         if current_hidden == 0:
@@ -226,6 +228,7 @@ def buildReward(n_periods, trade_prev, trade_cur, ret):
 
 # Global variables will be moved into a profit class at next commit
 priceAtPurchase = 0
+position_ret_curve = []
  
 # Runs RL script
 def run():
@@ -243,6 +246,12 @@ def run():
     losses = 0
     n_periods = 0
     for x in range(1, TOTAL_TRADES - 1):
+        # track signle interval position ret
+        if inPortfolio:
+            position_ret_one_interval = (data['EQUITY'][x] - data['EQUITY'][x - 1]) / float(data['EQUITY'][x - 1])
+            position_ret_curve.append(position_ret_one_interval)
+        else:
+            position_ret_curve = [] # begin tracking return curve
         # RL Agent chooses the trade
         trade = choose_trade(x, q_table, inPortfolio)
         cur_state = select_state(x, inPortfolio)
@@ -302,14 +311,14 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Hidden is 0 and in portfolio and ret >= 0',
-        "Hidden is 1 and in portfolio and ret >= 0",
-        "Hidden is 2 and in portfolio and ret >= 0",
-        "Hidden is 3 and in portfolio and ret >= 0",
-        'Hidden is 0 and in portfolio and ret < 0',
-        "Hidden is 1 and in portfolio and ret < 0",
-        "Hidden is 2 and in portfolio and ret < 0",
-        "Hidden is 3 and in portfolio and ret < 0",
+        'Hidden is 0 and in portfolio and local win rate >= 0.5',
+        "Hidden is 1 and in portfolio and local win rate >= 0.5",
+        "Hidden is 2 and in portfolio and local win rate >= 0.5",
+        "Hidden is 3 and in portfolio and local win rate >= 0.5",
+        'Hidden is 0 and in portfolio and local win rate < 0.5',
+        "Hidden is 1 and in portfolio and local win rate < 0.5",
+        "Hidden is 2 and in portfolio and local win rate < 0.5",
+        "Hidden is 3 and in portfolio and local win rate < 0.5",
         'Hidden is 0 and not in portfolio',
         "Hidden is 1 and not in portfolio",
         "Hidden is 2 and not in portfolio",
