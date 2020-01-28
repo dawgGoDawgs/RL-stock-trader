@@ -219,7 +219,7 @@ def run():
     inPortfolio = False
     # Assuming 0 profit -- or a portfolio with a reference of $0
     returns = []
-    hold_returns
+    hold_returns = []
     trade_periods = []
     # Move through all possible trades
     trade_prev = 1
