@@ -169,7 +169,6 @@ def select_state(pointer, current_in_portfolio):
     if current_in_portfolio:
 
         position_ret = (current_price - priceAtPurchase) / float(priceAtPurchase)
-        print(position_ret_curve)
         local_win_rate = sum(np.array(position_ret_curve) > 0) / float(len(position_ret_curve))
 
         if current_hidden == 0:
@@ -233,6 +232,7 @@ position_ret_curve = []
  
 # Runs RL script
 def run():
+    global position_ret_curve
     # Builds the Q-Table
     q_table = build_q_table(STATES, ACTIONS)
     inPortfolio = False
