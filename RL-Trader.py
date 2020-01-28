@@ -102,7 +102,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 20
+STATES = 12
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -183,26 +183,21 @@ def select_state(pointer, current_in_portfolio):
             state = 2 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
             state = 3 # Equity Appreciated and Hidden is 3
-        # check current previous
-        if current_price >= previous_price:
-            "rising"
-        else:
-            state += 4
         # check position ret
         if position_ret >= 0:
             "positive return on position"
         else:
-            state += 8
+            state += 4
 
     else:
         if current_hidden == 0:
-            state = 16 # Equity Appreciated and Hidden is 0
+            state = 8 # Equity Appreciated and Hidden is 0
         if current_hidden == 1:
-            state = 17 # Equity Appreciated and Hidden is 1
+            state = 9 # Equity Appreciated and Hidden is 1
         if current_hidden == 2:
-            state = 18 # Equity Appreciated and Hidden is 2
+            state = 10 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
-            state = 19 # Equity Appreciated and Hidden is 3
+            state = 11 # Equity Appreciated and Hidden is 3
 
     return state
 # Function to find the profit from trades
@@ -326,22 +321,14 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Hidden is 0 and in portfolio and rising and position ret',
-        "Hidden is 1 and in portfolio and rising and position ret",
-        "Hidden is 2 and in portfolio and rising and position ret",
-        "Hidden is 3 and in portfolio and rising and position ret",
-        'Hidden is 0 and in portfolio and falling and position ret',
-        "Hidden is 1 and in portfolio and falling and position ret",
-        "Hidden is 2 and in portfolio and falling and position ret",
-        "Hidden is 3 and in portfolio and falling and position ret",
-        'Hidden is 0 and in portfolio and rising and negative ret',
-        "Hidden is 1 and in portfolio and rising and negative ret",
-        "Hidden is 2 and in portfolio and rising and negative ret",
-        "Hidden is 3 and in portfolio and rising and negative ret",
-        'Hidden is 0 and in portfolio and falling and negative ret',
-        "Hidden is 1 and in portfolio and falling and negative ret",
-        "Hidden is 2 and in portfolio and falling and negative ret",
-        "Hidden is 3 and in portfolio and falling and negative ret",
+        'Hidden is 0 and in portfolio and positive ret',
+        "Hidden is 1 and in portfolio and positive ret",
+        "Hidden is 2 and in portfolio and positive ret",
+        "Hidden is 3 and in portfolio and positive ret",
+        'Hidden is 0 and in portfolio and negative ret',
+        "Hidden is 1 and in portfolio and negative ret",
+        "Hidden is 2 and in portfolio and negative ret",
+        "Hidden is 3 and in portfolio and negative ret",
         'Hidden is 0 and not in portfolio',
         "Hidden is 1 and not in portfolio",
         "Hidden is 2 and not in portfolio",
