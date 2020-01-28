@@ -30,6 +30,7 @@ import sys, time, datetime
 from Logic.logic import calculate_BSM, state_logic
 from talib import ADX, HT_DCPERIOD, RSI, BETA, CORREL, MFI
 from hmmlearn.hmm import GaussianHMM
+from datetime import datetime
 import matplotlib.pyplot as plt
 
 # Welcome message
