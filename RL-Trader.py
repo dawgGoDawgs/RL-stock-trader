@@ -100,7 +100,7 @@ model = GaussianHMM(n_components=num_components, covariance_type="diag", n_iter=
 hidden_states = model.predict(X)
 
 # Why not edit this?
-STATES = 12
+STATES = 20
 # Actions of Q-Table
 ACTIONS = ['buy', 'sell']
 # Holds total trades that can be made
@@ -186,20 +186,24 @@ def select_state(pointer, current_in_portfolio):
         if current_hidden == 3:
             state = 3 # Equity Appreciated and Hidden is 3
         # check position ret
-        if position_ret >= 0:
-            "positive return on position"
-        else:
+        if local_sharpe == None:
+            "no sharpe yet"
+        elif local_sharpe >= 1:
             state += 4
+        elif local_sharpe < 1 and local_sharpe >= 0:
+            state += 8
+        elif local_sharpe < 0:
+            state += 12
 
     else:
         if current_hidden == 0:
-            state = 8 # Equity Appreciated and Hidden is 0
+            state = 16 # Equity Appreciated and Hidden is 0
         if current_hidden == 1:
-            state = 9 # Equity Appreciated and Hidden is 1
+            state = 17 # Equity Appreciated and Hidden is 1
         if current_hidden == 2:
-            state = 10 # Equity Appreciated and Hidden is 2
+            state = 18 # Equity Appreciated and Hidden is 2
         if current_hidden == 3:
-            state = 11 # Equity Appreciated and Hidden is 3
+            state = 19 # Equity Appreciated and Hidden is 3
 
     return state
 # Function to find the profit from trades
@@ -323,14 +327,22 @@ Q-table:
 '''
     # Add reference column
     q_table["Reference"] = [
-        'Hidden is 0 and in portfolio and positive ret',
-        "Hidden is 1 and in portfolio and positive ret",
-        "Hidden is 2 and in portfolio and positive ret",
-        "Hidden is 3 and in portfolio and positive ret",
-        'Hidden is 0 and in portfolio and negative ret',
-        "Hidden is 1 and in portfolio and negative ret",
-        "Hidden is 2 and in portfolio and negative ret",
-        "Hidden is 3 and in portfolio and negative ret",
+        'Hidden is 0 and in portfolio and no sharpe',
+        "Hidden is 1 and in portfolio and no sharpe",
+        "Hidden is 2 and in portfolio and no sharpe",
+        "Hidden is 3 and in portfolio and no sharpe",
+        'Hidden is 0 and in portfolio and sharpe >= 1',
+        "Hidden is 1 and in portfolio and sharpe >= 1",
+        "Hidden is 2 and in portfolio and sharpe >= 1",
+        "Hidden is 3 and in portfolio and sharpe >= 1",
+        'Hidden is 0 and in portfolio and sharpe < 1 and sharpe >= 0',
+        "Hidden is 1 and in portfolio and sharpe < 1 and sharpe >= 0",
+        "Hidden is 2 and in portfolio and sharpe < 1 and sharpe >= 0",
+        "Hidden is 3 and in portfolio and sharpe < 1 and sharpe >= 0",
+        'Hidden is 0 and in portfolio and sharpe < 0',
+        "Hidden is 1 and in portfolio and sharpe < 0",
+        "Hidden is 2 and in portfolio and sharpe < 0",
+        "Hidden is 3 and in portfolio and sharpe < 0",
         'Hidden is 0 and not in portfolio',
         "Hidden is 1 and not in portfolio",
         "Hidden is 2 and not in portfolio",
