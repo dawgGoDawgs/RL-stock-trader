@@ -120,7 +120,8 @@ def build_q_table(n_states, actions):
 # Create dictionary
 compile_data = {
     'EQUITY': EQUITY['close'],
-    'HIDDEN': hidden_states
+    'HIDDEN': hidden_states,
+    'TIME_SEC': time_seconds
     }
 
 # Compile dataframe from dictionary
@@ -136,6 +137,8 @@ def choose_trade(pointer, q_table, inPortfolio):
     analytic_decision = state_logic(pointer, data)
     # Select state from Q-Table
     state_actions = q_table.iloc[select_state(pointer, inPortfolio), :]
+    # check if at end of day
+    at_end_of_day = data["TIME_SEC"][pointer]
     # If the greedy factor is less than a randomly distributed number, if there are no values
     # on the Q-table, or if less than half the possible trades have been run without our trading logic,
     # return our analytical trade logic decision
@@ -149,9 +152,11 @@ def choose_trade(pointer, q_table, inPortfolio):
         price_cur = data["EQUITY"][pointer]
         ret_cur = (price_cur - priceAtPurchase) / priceAtPurchase
         trigger_stop = ret_cur < stop_loss and inPortfolio
-        if str(maximum) == 'sell' or trigger_stop:
+        if str(maximum) == 'sell' or trigger_stop or at_end_of_day:
             if trigger_stop:
                 print "trigger stop"
+            if at_end_of_day:
+                print "at end of day"
             return 1
         if str(maximum) == 'buy':
             return 0
